@@ -1,6 +1,6 @@
 import userEvent from '@testing-library/user-event';
 import CharacterList from './CharacterList';
-import { renderWithClientProdider, waitForLoadingToFinish } from '../../unit-tests/helper';
+import { renderWithClientProdider, waitForLoadingToFinish } from '../../../unit-tests/helper';
 
 describe('Character List Page', () => {
   describe('Basic renderWithClientProdidering', () => {
@@ -14,7 +14,7 @@ describe('Character List Page', () => {
       await waitForLoadingToFinish();
       const characterName = await screen.findByText(/Luke Skywalker/i);
       expect(characterName).toBeInTheDocument();
-      const characteGender = await screen.findByText(/male/i);
+      const characteGender = await screen.findByText(/luke gender/i);
       expect(characteGender).toBeInTheDocument();
     });
   });
