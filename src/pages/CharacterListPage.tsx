@@ -1,4 +1,4 @@
-import CharacterList from '../components/CharacterList';
+import CharacterList from '../components/CharacterList/CharacterList';
 
 function CharacterListPage() {
   return (

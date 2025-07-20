@@ -11,7 +11,7 @@ This is a React 19 app created using Vite. It uses Tailwind CSS for styling, Typ
 
 ### Prerequisites
 
-- Node.js **v24** (or at least v20+ recommended)
+- Node.js **v23** (or at least v20+ recommended)
 - npm **v9+**
 
 ### Installation
