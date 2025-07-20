@@ -29,7 +29,7 @@
       "@components/*": ["./src/components/*"],
       "@pages/*": ["./src/pages/*"],
       "@hooks/*": ["./src/hooks/*"],
-      "@utils/*": ["./src/utils/*"],
+      "@utils/*": ["src/shared/*"],
       "@service/*": ["./src/service/*"]
     }
   },
