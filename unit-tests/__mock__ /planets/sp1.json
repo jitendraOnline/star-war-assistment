@@ -1,0 +1,20 @@
+{
+  "message": "ok",
+  "result": {
+    "uid": "sp1",
+    "properties": {
+      "name": "Earth",
+      "rotation_period": "24",
+      "orbital_period": "365",
+      "diameter": "10465",
+      "climate": "normal",
+      "gravity": "3 standard",
+      "terrain": "all types",
+      "surface_water": "1",
+      "population": "30000000",
+      "url": "https://www.swapi.tech/api/planets/sp1",
+      "created": "2024-01-01T00:00:00.000Z",
+      "edited": "2024-01-01T00:00:00.000Z"
+    }
+  }
+}

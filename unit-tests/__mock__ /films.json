@@ -1,0 +1,38 @@
+{
+  "message": "ok",
+  "result": [
+    {
+      "uid": "f1",
+      "properties": {
+        "title": "A New Hope",
+        "episode_id": 4,
+        "opening_crawl": "It is a period of civil war...",
+        "director": "George Lucas",
+        "producer": "Gary Kurtz, Rick McCallum",
+        "release_date": "1977-05-25",
+        "characters": [
+          "https://www.swapi.tech/api/people/1",
+          "https://www.swapi.tech/api/people/2"
+        ],
+        "url": "https://www.swapi.tech/api/films/1",
+        "created": "2024-01-01T00:00:00.000Z",
+        "edited": "2024-01-01T00:00:00.000Z"
+      }
+    },
+    {
+      "uid": "f2",
+      "properties": {
+        "title": "The Empire Strikes Back",
+        "episode_id": 5,
+        "opening_crawl": "It is a dark time for the Rebellion...",
+        "director": "Irvin Kershner",
+        "producer": "Gary Kurtz, Rick McCallum",
+        "release_date": "1980-05-17",
+        "characters": ["https://www.swapi.tech/api/people/1"],
+        "url": "https://www.swapi.tech/api/films/2",
+        "created": "2024-01-01T00:00:00.000Z",
+        "edited": "2024-01-01T00:00:00.000Z"
+      }
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "message": "ok",
+  "result": {
+    "uid": "sp1",
+    "properties": {
+      "name": "Search Patel",
+      "height": "172",
+      "mass": "77",
+      "hair_color": "black",
+      "skin_color": "fair",
+      "eye_color": "black",
+      "birth_year": "1992",
+      "gender": "male",
+      "homeworld": "https://www.swapi.tech/api/planets/sp1",
+      "url": "https://www.swapi.tech/api/people/sp1",
+      "created": "2025-01-18T00:00:00.000Z",
+      "edited": "2025-01-18T00:00:00.000Z"
+    }
+  }
+}

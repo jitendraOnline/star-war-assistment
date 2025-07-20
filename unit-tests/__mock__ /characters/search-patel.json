@@ -1,0 +1,25 @@
+{
+  "message": "ok",
+  "result": [
+    {
+      "_id": "5f63a36eee9fd7000499be42",
+      "uid": "sp1",
+      "__v": 2,
+      "description": "A person within the Star Wars universe",
+      "properties": {
+        "created": "2025-07-17T19:23:47.137Z",
+        "edited": "2025-07-17T19:23:47.137Z",
+        "name": "Search Patel",
+        "gender": "male",
+        "skin_color": "fair",
+        "hair_color": "blond",
+        "height": "172",
+        "eye_color": "blue",
+        "mass": "77",
+        "homeworld": "https://www.swapi.tech/api/planets/sp1",
+        "birth_year": "19BBY",
+        "url": "https://www.swapi.tech/api/people/sp1"
+      }
+    }
+  ]
+}
