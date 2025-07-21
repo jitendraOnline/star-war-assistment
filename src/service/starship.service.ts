@@ -1,3 +1,4 @@
+import { BASE_URL } from '@/shared/constants';
 import type { StarshipResponse } from '@/types/character.type';
 
 export const fetchStarshipsPage = async (
@@ -5,7 +6,7 @@ export const fetchStarshipsPage = async (
   limit: number,
   signal?: AbortSignal
 ): Promise<StarshipResponse> => {
-  const url = `https://www.swapi.tech/api/starships?expanded=true&page=${page}&limit=${limit}`;
+  const url = `${BASE_URL}starships?expanded=true&page=${page}&limit=${limit}`;
   const res = await fetch(url, { signal });
   if (!res.ok) throw new Error('Failed to fetch starships');
 

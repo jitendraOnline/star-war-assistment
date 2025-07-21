@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { debouse } from '../../shared/utils';
+import { debounse } from '../../shared/utils';
 import { useCharacters } from '../../hooks/useCharacters';
 import { PAGE_LIMIT } from '../../shared/constants';
 import { CharacterRow } from './CharacterRow';
@@ -21,7 +21,7 @@ export const CharacterList = () => {
   const { data, isLoading, isError, refetch } = useCharacters(page, search, !showFavouritesOnly);
 
   const debouncedSearch = useRef(
-    debouse((value: string) => setSearchParams({ page: '1', search: value }))
+    debounse((value: string) => setSearchParams({ page: '1', search: value }))
   );
 
   const updatePage = (newPage: number) =>
