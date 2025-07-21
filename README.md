@@ -64,10 +64,19 @@ npm run e2e:open
 ---
 
 ## Notes
-
+- The Api the chached using tanStack Query due rate limit.
 - MSW (Mock Service Worker) is used for mocking API calls in tests.
 - Tailwind CSS is configured via the official Vite plugin.
-- Project structure is feature-based, and kept intentionally simple.
+- Project structure is kept intentionally simple.
 - Cypress is used for e2e
+
+## Future Socpe
+- We can do more on css part but its good for now.
+- We can enancehe the character deatils page its page as of now just to demontration.
+- Unit test cases can we added to hooks and Other componet but i skipped them for simiplicty and time constraints.
+
+## Observation
+- the api resposne of character api is not consistant for limt, page, and name saerch.
+- it would have been better we are using grpahql it would have enanched the network optimiztin.
 
 ---
