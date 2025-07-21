@@ -22,6 +22,7 @@ describe('Character Details Feature', () => {
       fixture: 'films.json',
     }).as('filmsList');
   };
+  console.log(interceptFilmList);
 
   describe('Character List Page', () => {
     beforeEach(() => {
