@@ -12,7 +12,7 @@ function CharacterDetailPage() {
   const location = useLocation();
 
   const { character, isLoading, isError, refetch } = useCharacterDetail(id);
-  const { isFavourite, toggleFavourite } = useFavourites(id, { uid: id ?? '', ...character! });
+  const { isFavourite, toggleFavourite } = useFavourites(id, character);
   const {
     data: planet,
     isLoading: isPlanetLoading,

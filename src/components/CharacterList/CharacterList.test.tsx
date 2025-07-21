@@ -1,6 +1,7 @@
 import userEvent from '@testing-library/user-event';
 import CharacterList from './CharacterList';
 import { renderWithClientProdider, waitForLoadingToFinish } from '../../../unit-tests/helper';
+import { localStorageFavouriteKey } from '../../hooks/useFavourites';
 
 describe('Character List Page', () => {
   describe('Basic renderWithClientProdidering', () => {
@@ -42,28 +43,33 @@ describe('Character List Page', () => {
   describe('Favourites Toggle', () => {
     it('should allow displaying favourites from local storage', async () => {
       const favouriteCharacter = {
-        uid: '1',
-        properties: {
-          created: '2025-07-19T19:44:45.285Z',
-          edited: '2025-07-19T19:44:45.285Z',
+        1: {
+          uid: '1',
           name: 'Favourite Character',
           gender: 'favourite gender',
-          skin_color: 'fair',
-          hair_color: 'blond',
-          height: '172',
-          eye_color: 'blue',
-          mass: '77',
-          homeworld: 'https://www.swapi.tech/api/planets/1',
-          birth_year: '19BBY',
-          url: 'https://www.swapi.tech/api/people/1',
+          properties: {
+            created: '2025-07-19T19:44:45.285Z',
+            edited: '2025-07-19T19:44:45.285Z',
+            name: 'Favourite Character',
+            gender: 'favourite gender',
+            skin_color: 'fair',
+            hair_color: 'blond',
+            height: '172',
+            eye_color: 'blue',
+            mass: '77',
+            homeworld: 'https://www.swapi.tech/api/planets/1',
+            birth_year: '19BBY',
+            url: 'https://www.swapi.tech/api/people/1',
+          },
         },
       };
 
-      localStorage.setItem('favouriteCharacters', JSON.stringify(favouriteCharacter));
+      localStorage.setItem(localStorageFavouriteKey, JSON.stringify(favouriteCharacter));
 
       const screen = renderWithClientProdider(<CharacterList />);
       const toggle = await screen.findByRole('checkbox', { name: /show favourites only/i });
       expect(toggle).toBeInTheDocument();
+      await userEvent.click(toggle);
 
       const characterName = await screen.findByText(/Favourite Character/i);
       expect(characterName).toBeInTheDocument();

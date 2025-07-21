@@ -1,36 +1,54 @@
-import type { CharacterListItem } from '../types/character.type';
-import { useEffect, useState } from 'react';
+import type { CharacterListItem, CharacterProperties } from '../types/character.type';
+import { useEffect, useState, useMemo } from 'react';
 
-export function useFavourites(uid?: string, character?: CharacterListItem) {
-  const [isFavourite, setIsFavourite] = useState(false);
+export const localStorageFavouriteKey = 'favourites';
+
+function readFavourites(): Record<string, CharacterListItem> {
+  const data = localStorage.getItem(localStorageFavouriteKey);
+  try {
+    return data ? JSON.parse(data) : {};
+  } catch {
+    return {};
+  }
+}
+
+function writeFavourites(favs: Record<string, CharacterListItem>) {
+  localStorage.setItem(localStorageFavouriteKey, JSON.stringify(favs));
+}
+
+export function useFavourites(uid?: string, character?: CharacterProperties) {
+  const [favourites, setFavourites] = useState<Record<string, CharacterListItem>>({});
 
   useEffect(() => {
-    if (!uid) return;
-    const favs = localStorage.getItem('favourites');
-    if (favs) {
-      const parsed = JSON.parse(favs) as Record<string, CharacterListItem>;
-      setIsFavourite(!!parsed[uid]);
-    }
+    setFavourites(readFavourites());
   }, [uid]);
+
+  const isFavourite = useMemo(() => {
+    return !!(uid && favourites[uid]);
+  }, [uid, favourites]);
 
   const toggleFavourite = () => {
     if (!uid || !character) return;
-    const favs = localStorage.getItem('favourites');
-    const parsed = favs ? (JSON.parse(favs) as Record<string, CharacterListItem>) : {};
-
-    if (parsed[uid]) {
-      delete parsed[uid];
-      setIsFavourite(false);
+    const favs = readFavourites();
+    if (favs[uid]) {
+      delete favs[uid];
     } else {
-      parsed[uid] = character;
-      setIsFavourite(true);
+      favs[uid] = {
+        uid: uid,
+        name: character.name,
+        url: character.url,
+        gender: character.gender,
+        homeworld: character.homeworld,
+        properties: character,
+      };
     }
-
-    localStorage.setItem('favourites', JSON.stringify(parsed));
+    writeFavourites(favs);
+    setFavourites(favs);
   };
 
   return {
     isFavourite,
     toggleFavourite,
+    favourites,
   };
 }
