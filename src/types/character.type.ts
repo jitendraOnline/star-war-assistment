@@ -66,3 +66,42 @@ export interface PlanetDetailResponse {
     properties: PlanetProperties;
   };
 }
+
+export type FilmDetail = {
+  title: string;
+  release_date: string;
+  characters: string[];
+  uid: string;
+};
+
+export interface Starship {
+  name: string;
+  model: string;
+  manufacturer: string;
+  cost_in_credits: string;
+  length: string;
+  crew: string;
+  passengers: string;
+  max_atmosphering_speed: string;
+  hyperdrive_rating: string;
+  MGLT: string;
+  cargo_capacity: string;
+  consumables: string;
+  starship_class: string;
+  pilots: string[]; // URLs to people
+  films: string[];
+  url: string;
+  created: string;
+  edited: string;
+}
+
+export interface StarshipResponse {
+  message: string;
+  total_records: number;
+  results: {
+    uid: string;
+    _id: string;
+    description: string;
+    properties: Starship;
+  }[];
+}

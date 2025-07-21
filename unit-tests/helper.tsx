@@ -16,3 +16,7 @@ export async function waitForLoadingToFinish() {
   expect(loadingText).toBeInTheDocument();
   await waitForElementToBeRemoved(loadingText);
 }
+
+export async function renderWithUrlAndClientProvider(ui: React.ReactElement, url: string) {
+  return renderWithClientProdider(<MemoryRouter initialEntries={[url]}>{ui}</MemoryRouter>);
+}
