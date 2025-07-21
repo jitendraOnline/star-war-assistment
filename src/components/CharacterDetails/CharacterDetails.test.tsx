@@ -2,6 +2,7 @@ import { renderWithClientProdider } from '../../../unit-tests/helper';
 import CharacterDetails from './CharacterDetails';
 import { screen } from '@testing-library/react';
 import { waitForElementToBeRemoved } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
 //we shoudl get the character value id form url.(loading character and deatils of character)
@@ -24,9 +25,8 @@ describe('CharacterDetails', () => {
   });
 
   it('should load and display character details', async () => {
-    const loadingText = await screen.findByText(/Loading/i);
+    const loadingText = await screen.findByText(/Loading character details.../i);
     expect(loadingText).toBeInTheDocument();
-    await waitForElementToBeRemoved(() => screen.queryByText(/Loading/i));
 
     expect(await screen.findByText(/Luke Skywalker/i)).toBeInTheDocument();
     expect(await screen.findByText(/Male/i)).toBeInTheDocument();
@@ -35,10 +35,10 @@ describe('CharacterDetails', () => {
   });
 
   it('should display character films', async () => {
-    const loadingText = await screen.findByText(/Loading/i);
+    const loadingText = await screen.getByText(/Loading Films/i);
     expect(loadingText).toBeInTheDocument();
 
-    await waitForElementToBeRemoved(() => screen.queryByText(/Loading Films/i));
+    await waitForElementToBeRemoved(loadingText);
 
     expect(await screen.findByText(/A New Hope/i)).toBeInTheDocument();
     expect(screen.getByText(/The Empire Strikes Back/i)).toBeInTheDocument();
@@ -48,7 +48,7 @@ describe('CharacterDetails', () => {
     const loadingText = await screen.findByText(/Loading StarShips.../i);
     expect(loadingText).toBeInTheDocument();
 
-    await waitForElementToBeRemoved(() => screen.queryByText(/Loading StarShips.../i));
+    await waitForElementToBeRemoved(loadingText);
 
     expect(await screen.findByText(/Sentinel-class landing craft/i)).toBeInTheDocument();
   });
@@ -59,7 +59,17 @@ describe('CharacterDetails', () => {
     expect(backbutton).toBeEnabled();
   });
 
-  //   it('FAVOITUE BUTTON', async () => {
-  //     TODO
-  //   });
+  it('it should dispaly favourite button after charter load and user should be able to toggle it.', async () => {
+    const favouriteButton = screen.getByRole('button', { name: /Toggle Favourite Button/i });
+    expect(favouriteButton).toBeInTheDocument();
+    expect(favouriteButton).toBeDisabled();
+    expect(favouriteButton).toHaveTextContent('☆ Favourite');
+    const loadingText = await screen.findByText(/Loading/i);
+    expect(loadingText).toBeInTheDocument();
+    await waitForElementToBeRemoved(() => screen.queryByText(/Loading/i));
+    expect(favouriteButton).toBeEnabled();
+    await userEvent.click(favouriteButton);
+    expect(favouriteButton).toBeInTheDocument();
+    expect(favouriteButton).toHaveTextContent('★ Favourite');
+  });
 });

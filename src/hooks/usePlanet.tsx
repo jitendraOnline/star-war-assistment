@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { fetchPlanet } from '../service/character.service';
+import { fetchPlanet } from '../service/planet.service';
 
 export const usePlanet = (homeworld?: string) => {
   return useQuery({

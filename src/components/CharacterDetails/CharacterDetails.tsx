@@ -2,16 +2,18 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useCharacterDetail } from '../../hooks/useCharacterDetails';
 import { usePlanet } from '../..//hooks/usePlanet';
 import { useFilmByCharacter } from '../../hooks/useFilmByCharacter';
-import type { FilmDetail, Starship } from '../../types/character.type';
+import type { FilmProperties } from '../../types/character.type';
 import { useStarshipsByCharacter } from '../../hooks/useStarshipByCharacter';
+import { useFavourites } from '../../hooks/useFavourites';
 
 function CharacterDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { character, isLoading, isError, refetch } = useCharacterDetail(id);
-  const { isFavourite, toggleFavourite } = { isFavourite: false, toggleFavourite: () => {} };
+  const { data: characterDetailResponse, isLoading, isError, refetch } = useCharacterDetail(id);
+  const character = characterDetailResponse?.result.properties;
+  const { isFavourite, toggleFavourite } = useFavourites(id, characterDetailResponse?.result);
   const {
     data: planet,
     isLoading: isPlanetLoading,
@@ -93,7 +95,7 @@ function CharacterDetailPage() {
           <p>No films found for this character.</p>
         ) : (
           <ul className="list-disc list-inside text-sm">
-            {films?.map((film: FilmDetail) => (
+            {films?.map((film: FilmProperties) => (
               <li key={film.uid}>
                 {film.title} ({film.release_date})
               </li>
@@ -112,7 +114,7 @@ function CharacterDetailPage() {
           <p>No starship found for this character.</p>
         ) : (
           <ul className="list-disc list-inside text-sm">
-            {starships?.map((starship: Starship) => (
+            {starships?.map((starship) => (
               <li key={starship?.name}>{starship?.name}</li>
             ))}
           </ul>

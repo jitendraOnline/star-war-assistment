@@ -4,9 +4,10 @@ import { debouse } from '../../shared/utils';
 import { useCharacters } from '../../hooks/useCharacters';
 import { PAGE_LIMIT } from '../../shared/constants';
 import { CharacterRow } from './CharacterRow';
+import { useFavourites } from '../../hooks/useFavourites';
+import type { CharacterListItem } from '../../types/character.type';
 
 const TABLE_HEADERS = ['Name', 'Gender', 'Planet'];
-const EMPTY_FAVOURITES = {};
 
 export const CharacterList = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -15,7 +16,7 @@ export const CharacterList = () => {
 
   const page = Number(searchParams.get('page') || '1');
   const search = searchParams.get('search') || '';
-  const { favourites = EMPTY_FAVOURITES } = {}; // useFavourites();
+  const { favourites } = useFavourites();
 
   const { data, isLoading, isError, refetch } = useCharacters(page, search, !showFavouritesOnly);
 
@@ -59,7 +60,7 @@ export const CharacterList = () => {
           </td>
         </tr>
       ) : (
-        favList.map((char: any) => <CharacterRow key={char.uid} character={char} />)
+        favList.map((char: CharacterListItem) => <CharacterRow key={char.uid} character={char} />)
       );
     }
 
