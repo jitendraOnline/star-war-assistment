@@ -1,4 +1,4 @@
-import type { CharacterListItem, CharacterProperties } from '../types/character.type';
+import type { CharacterListItem } from '../types/character.type';
 import { useEffect, useState, useMemo } from 'react';
 
 export const localStorageFavouriteKey = 'favourites';
@@ -16,7 +16,7 @@ function writeFavourites(favs: Record<string, CharacterListItem>) {
   localStorage.setItem(localStorageFavouriteKey, JSON.stringify(favs));
 }
 
-export function useFavourites(uid?: string, character?: CharacterProperties) {
+export function useFavourites(uid?: string, character?: CharacterListItem) {
   const [favourites, setFavourites] = useState<Record<string, CharacterListItem>>({});
 
   useEffect(() => {
@@ -33,14 +33,7 @@ export function useFavourites(uid?: string, character?: CharacterProperties) {
     if (favs[uid]) {
       delete favs[uid];
     } else {
-      favs[uid] = {
-        uid: uid,
-        name: character.name,
-        url: character.url,
-        gender: character.gender,
-        homeworld: character.homeworld,
-        properties: character,
-      };
+      favs[uid] = character;
     }
     writeFavourites(favs);
     setFavourites(favs);

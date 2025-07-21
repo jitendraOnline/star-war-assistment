@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
-import { fetchStarshipsPage } from '../service/character.service';
-import type { Starship } from '../types/character.type';
+import { fetchStarshipsPage } from '../service/starship.service';
+import type { StarshipProperties } from '../types/character.type';
 
 export const useStarshipsByCharacter = (peopleUrl?: string) => {
-  return useQuery<Starship[]>({
+  return useQuery<StarshipProperties[]>({
     queryKey: ['all-starships'],
     queryFn: async ({ signal }) => {
       const meta = await fetchStarshipsPage(1, 1, signal);
