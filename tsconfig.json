@@ -12,6 +12,7 @@
       "@utils/*": ["src/shared/*"],
       "@service/*": ["./src/service/*"]
     },
+
     "types": ["vitest/globals", "@testing-library/jest-dom"]
   }
 }

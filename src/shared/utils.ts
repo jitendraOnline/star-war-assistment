@@ -1,4 +1,4 @@
-export const debouse = <T extends unknown[]>(func: (...args: T) => void, delay: number = 300) => {
+export const debounse = <T extends unknown[]>(func: (...args: T) => void, delay: number = 300) => {
   let timeoutId: NodeJS.Timeout;
   return (...args: T) => {
     clearTimeout(timeoutId);
