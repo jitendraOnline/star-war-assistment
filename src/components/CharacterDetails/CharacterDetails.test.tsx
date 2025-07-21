@@ -2,6 +2,7 @@ import { renderWithClientProdider } from '../../../unit-tests/helper';
 import CharacterDetails from './CharacterDetails';
 import { screen } from '@testing-library/react';
 import { waitForElementToBeRemoved } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
 //we shoudl get the character value id form url.(loading character and deatils of character)
@@ -59,7 +60,17 @@ describe('CharacterDetails', () => {
     expect(backbutton).toBeEnabled();
   });
 
-  //   it('FAVOITUE BUTTON', async () => {
-  //     TODO
-  //   });
+  it('it should dispaly favourite button after charter load and user should be able to toggle it.', async () => {
+    const favouriteButton = screen.getByRole('button', { name: /Toggle Favourite Button/i });
+    expect(favouriteButton).toBeInTheDocument();
+    expect(favouriteButton).toBeDisabled();
+    expect(favouriteButton).toHaveTextContent('☆ Favourite');
+    const loadingText = await screen.findByText(/Loading/i);
+    expect(loadingText).toBeInTheDocument();
+    await waitForElementToBeRemoved(() => screen.queryByText(/Loading/i));
+    expect(favouriteButton).toBeEnabled();
+    await userEvent.click(favouriteButton);
+    expect(favouriteButton).toBeInTheDocument();
+    expect(favouriteButton).toHaveTextContent('★ Favourite');
+  });
 });
