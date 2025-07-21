@@ -14,6 +14,10 @@ This is a React 19 app created using Vite. It uses Tailwind CSS for styling, Typ
 - Node.js **v23** (or at least v20+ recommended)
 - npm **v9+**
 
+### Recommanded
+- use prettier plugin for vs code.
+- use eslint plugin for vs code.
+
 ### Installation
 
 ```bash
@@ -64,7 +68,8 @@ npm run e2e:open
 ---
 
 ## Notes
-- The Api the chached using tanStack Query due rate limit.
+- The Api's are chached using tanStack Query due rate limit and to many network call.
+- Global State management is intentionally skipped due to size of applition and for simplicity.
 - MSW (Mock Service Worker) is used for mocking API calls in tests.
 - Tailwind CSS is configured via the official Vite plugin.
 - Project structure is kept intentionally simple.
