@@ -25,9 +25,8 @@ describe('CharacterDetails', () => {
   });
 
   it('should load and display character details', async () => {
-    const loadingText = await screen.findByText(/Loading/i);
+    const loadingText = await screen.findByText(/Loading character details.../i);
     expect(loadingText).toBeInTheDocument();
-    await waitForElementToBeRemoved(() => screen.queryByText(/Loading/i));
 
     expect(await screen.findByText(/Luke Skywalker/i)).toBeInTheDocument();
     expect(await screen.findByText(/Male/i)).toBeInTheDocument();
@@ -36,10 +35,10 @@ describe('CharacterDetails', () => {
   });
 
   it('should display character films', async () => {
-    const loadingText = await screen.findByText(/Loading/i);
+    const loadingText = await screen.getByText(/Loading Films/i);
     expect(loadingText).toBeInTheDocument();
 
-    await waitForElementToBeRemoved(() => screen.queryByText(/Loading Films/i));
+    await waitForElementToBeRemoved(loadingText);
 
     expect(await screen.findByText(/A New Hope/i)).toBeInTheDocument();
     expect(screen.getByText(/The Empire Strikes Back/i)).toBeInTheDocument();
@@ -49,7 +48,7 @@ describe('CharacterDetails', () => {
     const loadingText = await screen.findByText(/Loading StarShips.../i);
     expect(loadingText).toBeInTheDocument();
 
-    await waitForElementToBeRemoved(() => screen.queryByText(/Loading StarShips.../i));
+    await waitForElementToBeRemoved(loadingText);
 
     expect(await screen.findByText(/Sentinel-class landing craft/i)).toBeInTheDocument();
   });

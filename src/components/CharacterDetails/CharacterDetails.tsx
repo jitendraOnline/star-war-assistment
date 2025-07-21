@@ -4,6 +4,7 @@ import { usePlanet } from '../..//hooks/usePlanet';
 import { useFilmByCharacter } from '../../hooks/useFilmByCharacter';
 import type { FilmDetail, Starship } from '../../types/character.type';
 import { useStarshipsByCharacter } from '../../hooks/useStarshipByCharacter';
+import { useFavourites } from '../../hooks/useFavourites';
 
 function CharacterDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -11,7 +12,7 @@ function CharacterDetailPage() {
   const location = useLocation();
 
   const { character, isLoading, isError, refetch } = useCharacterDetail(id);
-  const { isFavourite, toggleFavourite } = { isFavourite: false, toggleFavourite: () => {} };
+  const { isFavourite, toggleFavourite } = useFavourites(id, { uid: id ?? '', ...character! });
   const {
     data: planet,
     isLoading: isPlanetLoading,
