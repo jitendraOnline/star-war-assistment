@@ -15,6 +15,7 @@ import planet3 from './__mock__ /planets/3.json';
 import planetSp1 from './__mock__ /planets/sp1.json';
 
 import films from './__mock__ /films.json';
+import startship from './__mock__ /starships/starship.json';
 
 export const handlers = [
   http.get('https://www.swapi.tech/api/people', ({ request }) => {
@@ -85,4 +86,5 @@ export const handlers = [
   }),
 
   http.get('https://www.swapi.tech/api/films', () => HttpResponse.json(films)),
+  http.get('https://www.swapi.tech/api/starships', () => HttpResponse.json(startship)),
 ];

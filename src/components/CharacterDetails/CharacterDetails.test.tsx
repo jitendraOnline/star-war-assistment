@@ -1,6 +1,8 @@
+import { renderWithClientProdider } from '../../../unit-tests/helper';
 import CharacterDetails from './CharacterDetails';
-import { render, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import { waitForElementToBeRemoved } from '@testing-library/react';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
 //we shoudl get the character value id form url.(loading character and deatils of character)
 // we should get call and api to get charater and dispaly its details(loading character and deatils of character)
@@ -10,47 +12,48 @@ import { waitForElementToBeRemoved } from '@testing-library/react';
 //there should be backbutton to navigate back to character
 
 describe('CharacterDetails', () => {
-  it('should display character details', async () => {
-    render(<CharacterDetails />);
+  beforeEach(() => {
+    renderWithClientProdider(
+      <MemoryRouter initialEntries={['/characters/1']}>
+        <Routes>
+          <Route path="/characters/:id" element={<CharacterDetails />} />
+        </Routes>
+      </MemoryRouter>,
+      false
+    );
+  });
 
+  it('should load and display character details', async () => {
     const loadingText = await screen.findByText(/Loading/i);
     expect(loadingText).toBeInTheDocument();
-
     await waitForElementToBeRemoved(() => screen.queryByText(/Loading/i));
 
-    expect(await screen.findByText(/Jitendra Patel/i)).toBeInTheDocument();
+    expect(await screen.findByText(/Luke Skywalker/i)).toBeInTheDocument();
     expect(await screen.findByText(/Male/i)).toBeInTheDocument();
-    expect(await screen.findByText(/black/i)).toBeInTheDocument();
+    expect(await screen.findByText(/blond/i)).toBeInTheDocument();
     expect(await screen.findByText(/Earth/i)).toBeInTheDocument();
   });
 
   it('should display character films', async () => {
-    render(<CharacterDetails />);
-
     const loadingText = await screen.findByText(/Loading/i);
     expect(loadingText).toBeInTheDocument();
 
-    await waitForElementToBeRemoved(() => screen.queryByText(/Loading/i));
+    await waitForElementToBeRemoved(() => screen.queryByText(/Loading Films/i));
 
     expect(await screen.findByText(/A New Hope/i)).toBeInTheDocument();
     expect(screen.getByText(/The Empire Strikes Back/i)).toBeInTheDocument();
-    expect(screen.queryByText(/Return of the Jedi/i)).not.toBeInTheDocument();
-    expect(screen.queryByText(/The Phantom Menace/i)).not.toBeInTheDocument();
   });
 
   it('should display character starship', async () => {
-    render(<CharacterDetails />);
-
-    const loadingText = await screen.findByText(/Loading/i);
+    const loadingText = await screen.findByText(/Loading StarShips.../i);
     expect(loadingText).toBeInTheDocument();
 
-    await waitForElementToBeRemoved(() => screen.queryByText(/Loading/i));
+    await waitForElementToBeRemoved(() => screen.queryByText(/Loading StarShips.../i));
 
-    expect(await screen.findByText(/CR90 corvette/i)).toBeInTheDocument();
+    expect(await screen.findByText(/Sentinel-class landing craft/i)).toBeInTheDocument();
   });
 
   it('back button should be present on navigating to character details page', async () => {
-    render(<CharacterDetails />);
     const backbutton = screen.getByRole('button', { name: / Back to Character List/i });
     expect(backbutton).toBeInTheDocument();
     expect(backbutton).toBeEnabled();
