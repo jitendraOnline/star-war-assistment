@@ -30,14 +30,13 @@ describe('Character Details Feature', () => {
       interceptPlanetDetails();
       cy.visit('/');
       cy.wait('@getCharacterList');
-      cy.wait('@planetSearch');
     });
 
     it('should load and display characters with planet info', () => {
       cy.get('table').should('exist');
       cy.get('td').contains('Luke Skywalker').should('exist');
       cy.get('td').contains('Leia Organa').should('exist');
-      cy.get('td').contains('Earth').should('exist');
+      cy.get('td').contains('Tatooine').should('exist');
     });
 
     it('should search character and display correct result', () => {
@@ -53,11 +52,10 @@ describe('Character Details Feature', () => {
         .should('have.value', 'Yoda');
 
       cy.wait('@characterListSearch');
-      cy.wait('@planetSearch');
 
       cy.get('td').contains('Yoda').should('exist');
       cy.get('td').contains('male').should('exist');
-      cy.get('td').contains('Earth').should('exist');
+      cy.get('td').contains('unknown').should('exist');
     });
   });
 

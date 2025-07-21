@@ -39,7 +39,9 @@ export const CharacterList = () => {
   const getDisplayText = () => {
     if (isLoading) return '';
 
-    const total = data?.total_records || 0;
+    const total = showFavouritesOnly
+      ? (Object.keys(favourites)?.length ?? 0)
+      : (data?.total_records ?? 0);
 
     if (search) {
       return `Found ${total} result${total !== 1 ? 's' : ''} for ${search}.${total === 0 ? ' Try a different name.' : ''}`;
@@ -60,7 +62,9 @@ export const CharacterList = () => {
           </td>
         </tr>
       ) : (
-        favList.map((char: CharacterListItem) => <CharacterRow key={char.uid} character={char} />)
+        favList
+          ?.filter((char) => char?.properties?.name?.includes(search))
+          .map((char: CharacterListItem) => <CharacterRow key={char.uid} character={char} />)
       );
     }
 
@@ -101,7 +105,7 @@ export const CharacterList = () => {
 
   return (
     <div className="p-4 space-y-6">
-      <div className="flex gap-2">
+      <div className="flex gap-2 flex-wrap">
         <input
           type="text"
           placeholder="Search by character name"

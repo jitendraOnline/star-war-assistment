@@ -1,10 +1,10 @@
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useCharacterDetail } from '../../hooks/useCharacterDetails';
-import { usePlanet } from '../..//hooks/usePlanet';
 import { useFilmByCharacter } from '../../hooks/useFilmByCharacter';
 import type { FilmProperties } from '../../types/character.type';
 import { useStarshipsByCharacter } from '../../hooks/useStarshipByCharacter';
 import { useFavourites } from '../../hooks/useFavourites';
+import { usePlanetsByCharacter } from '@/hooks/usePlanetsByCharacter';
 
 function CharacterDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -18,7 +18,7 @@ function CharacterDetailPage() {
     data: planet,
     isLoading: isPlanetLoading,
     isError: isPlanetError,
-  } = usePlanet(character?.homeworld);
+  } = usePlanetsByCharacter(character?.homeworld);
 
   const {
     data: films,
@@ -79,7 +79,11 @@ function CharacterDetailPage() {
             </p>
             <p>
               <strong>Home Planet:</strong>{' '}
-              {isPlanetLoading ? 'Loading...' : isPlanetError ? 'Unknown' : (planet?.name ?? '-')}
+              {isPlanetLoading
+                ? 'Loading...'
+                : isPlanetError
+                  ? 'Unknown'
+                  : (planet?.[0]?.name ?? '-')}
             </p>
           </div>
         </>
