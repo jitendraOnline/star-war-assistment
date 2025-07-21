@@ -13,6 +13,7 @@ import planet1 from './__mock__ /planets/1.json';
 import planet2 from './__mock__ /planets/2.json';
 import planet3 from './__mock__ /planets/3.json';
 import planetSp1 from './__mock__ /planets/sp1.json';
+import allPlanetes from './__mock__ /planets/all.json';
 
 import films from './__mock__ /films.json';
 import startship from './__mock__ /starships/starship.json';
@@ -84,6 +85,8 @@ export const handlers = [
         });
     }
   }),
+
+  http.get('https://www.swapi.tech/api/planets', () => HttpResponse.json(allPlanetes)),
 
   http.get('https://www.swapi.tech/api/films', () => HttpResponse.json(films)),
   http.get('https://www.swapi.tech/api/starships', () => HttpResponse.json(startship)),

@@ -116,5 +116,7 @@ export type CharacterSearchResponse = ApiResponse<CharacterSearchResultItem[]>;
 
 export type FilmResponse = ApiResponse<FilmDetail[]>;
 
+export type PlanetsResponse = PaginatedResponse<PlanetDetail>;
 export type PlanetDetailResponse = ApiResponse<PlanetDetail>;
+
 export type StarshipResponse = PaginatedResponse<StarshipListItem>;

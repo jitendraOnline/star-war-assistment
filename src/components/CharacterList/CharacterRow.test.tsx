@@ -29,7 +29,7 @@ describe('Character List Page', () => {
       expect(characterName).toBeInTheDocument();
       const characteGender = await screen.findByText(/male/i);
       expect(characteGender).toBeInTheDocument();
-      const charactePlanet = await screen.findByText(/Earth 1/i);
+      const charactePlanet = await screen.findByText(/Tatooine/i);
       expect(charactePlanet).toBeInTheDocument();
     });
   });

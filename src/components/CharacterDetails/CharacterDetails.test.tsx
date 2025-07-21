@@ -31,7 +31,7 @@ describe('CharacterDetails', () => {
     expect(await screen.findByText(/Luke Skywalker/i)).toBeInTheDocument();
     expect(await screen.findByText(/Male/i)).toBeInTheDocument();
     expect(await screen.findByText(/blond/i)).toBeInTheDocument();
-    expect(await screen.findByText(/Earth/i)).toBeInTheDocument();
+    expect(await screen.findByText(/Tatooine/i)).toBeInTheDocument();
   });
 
   it('should display character films', async () => {
@@ -64,9 +64,9 @@ describe('CharacterDetails', () => {
     expect(favouriteButton).toBeInTheDocument();
     expect(favouriteButton).toBeDisabled();
     expect(favouriteButton).toHaveTextContent('☆ Favourite');
-    const loadingText = await screen.findByText(/Loading/i);
+    const loadingText = await screen.findByText(/Loading character details.../i);
     expect(loadingText).toBeInTheDocument();
-    await waitForElementToBeRemoved(() => screen.queryByText(/Loading/i));
+    await waitForElementToBeRemoved(() => screen.queryByText(/Loading character details.../i));
     expect(favouriteButton).toBeEnabled();
     await userEvent.click(favouriteButton);
     expect(favouriteButton).toBeInTheDocument();

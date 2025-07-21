@@ -1,6 +1,6 @@
 import { Link, useSearchParams } from 'react-router-dom';
 import type { CharacterListItem, PlanetProperties } from '../../types/character.type';
-import { usePlanet } from '../../hooks/usePlanet';
+import { usePlanetsByCharacter } from '@/hooks/usePlanetsByCharacter';
 
 interface CharacterRowProps {
   character: CharacterListItem;
@@ -24,8 +24,8 @@ export const CharacterRow = ({ character }: CharacterRowProps) => {
   const queryString = searchParams.toString();
   const querySuffix = queryString ? `?${queryString}` : '';
 
-  const { data: planet, isLoading, isError } = usePlanet(homeworld);
-  const planetName = getPlanetDisplay(planet, isLoading, isError);
+  const { data: planet, isLoading, isError } = usePlanetsByCharacter(homeworld);
+  const planetName = getPlanetDisplay(planet?.[0], isLoading, isError);
   if (!properties) return null;
   return (
     <tr className="hover:bg-blue-50">
