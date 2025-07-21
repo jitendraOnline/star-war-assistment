@@ -47,7 +47,7 @@ function CharacterDetailPage() {
     <div className="p-4 space-y-6">
       <button
         onClick={() => navigate(`/characters${location.search}`)}
-        className="text-sm text-blue-600 underline hover:text-blue-800"
+        className="text-sm text-blue-600 underline hover:text-blue-800 cursor-pointer"
       >
         ← Back to Character List
       </button>

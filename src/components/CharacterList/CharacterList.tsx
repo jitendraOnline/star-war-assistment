@@ -142,14 +142,14 @@ export const CharacterList = () => {
           <button
             onClick={() => updatePage(page - 1)}
             disabled={!data.previous}
-            className="px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
           >
             Previous
           </button>
           <button
             onClick={() => updatePage(page + 1)}
             disabled={!data.next}
-            className="px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
           >
             Next
           </button>
