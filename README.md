@@ -78,10 +78,11 @@ npm run e2e:open
 ## Future Socpe
 - We can do more on css part but its good for now.
 - We can enancehe the character deatils page its page as of now just to demontration.
-- Unit test cases can we added to hooks and Other componet but i skipped them for simiplicty and time constraints.
+- Unit test coverage is 93% can we increasd to 98-100% but not needed right now.
 
 ## Observation
 - the api resposne of character api is not consistant for limt, page, and name saerch.
-- it would have been better we are using grpahql it would have enanched the network optimiztin.
+  #i have transformed the data so them we can display them on same table.
 
----
+- it would have been better we are using grpahql it would have enanched the network optimiztin.
+ # right now we heavely caching all the network request.
