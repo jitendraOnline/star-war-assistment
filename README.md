@@ -2,6 +2,8 @@
 
 This is a React 19 app created using Vite. It uses Tailwind CSS for styling, TypeScript, and TanStack Query for data fetching.
 
+like at https://evolenthealth-6c599.web.app/characters?page=1&search=
+
 ## Getting Started
 
 ### WIKI
