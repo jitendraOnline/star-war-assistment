@@ -10,7 +10,7 @@ export const routes: RouteObject[] = [
     element: (
       <div className="flex h-[100vh] w-[100vw] flex-col">
         <header className="p-4 bg-gray-100 text-lg font-bold border-b">Allica Bank</header>
-        <main className="flex-1 overflow-auto p-4">
+        <main className="flex-1 overflow-auto p-4 bg-white/80">
           <Outlet />
         </main>
       </div>

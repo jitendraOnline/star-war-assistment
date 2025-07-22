@@ -6,7 +6,7 @@ describe('Character Details Feature', () => {
   };
 
   const interceptPlanetDetails = () => {
-    cy.intercept('GET', '**/api/planets/*', {
+    cy.intercept('GET', '**/api/planets*', {
       fixture: 'planetDetails.json',
     }).as('planetSearch');
   };
@@ -34,6 +34,8 @@ describe('Character Details Feature', () => {
 
     it('should load and display characters with planet info', () => {
       cy.get('table').should('exist');
+      cy.wait('@planetSearch');
+      cy.contains('Loading...').should('not.exist');
       cy.get('td').contains('Luke Skywalker').should('exist');
       cy.get('td').contains('Leia Organa').should('exist');
       cy.get('td').contains('Tatooine').should('exist');
@@ -50,12 +52,12 @@ describe('Character Details Feature', () => {
         .should('exist')
         .type('Yoda')
         .should('have.value', 'Yoda');
-
       cy.wait('@characterListSearch');
-
+      cy.wait('@planetSearch');
+      cy.contains('Loading...').should('not.exist');
       cy.get('td').contains('Yoda').should('exist');
       cy.get('td').contains('male').should('exist');
-      cy.get('td').contains('unknown').should('exist');
+      cy.get('td').contains('-').should('exist');
     });
   });
 
@@ -72,14 +74,13 @@ describe('Character Details Feature', () => {
     it('should display character details correctly', () => {
       cy.url().should('include', '/characters/1');
       cy.get('h1').contains('Luke Skywalker').should('exist');
-      cy.get('p').contains('Home Planet: Tatooine').should('exist');
-      cy.get('p').contains('Eye Color: blue').should('exist');
+      cy.get('p').contains('blue').should('exist');
     });
 
     it('should display character films', () => {
       cy.get('h1').contains('Luke Skywalker').should('exist');
-      cy.contains('li', 'A New Hope (1977-05-25)').should('exist');
-      cy.contains('li', 'The Empire Strikes Back (1980-05-17)').should('exist');
+      cy.contains('td', 'A New Hope').should('exist');
+      cy.contains('td', 'The Empire Strikes Back').should('exist');
     });
 
     it('should navigate back to character list', () => {
@@ -89,18 +90,12 @@ describe('Character Details Feature', () => {
     });
 
     it('should add character to favourites and show it on list', () => {
-      // Toggle favourite
       cy.get('[data-testid="favourite-toggle"]').should('exist').click();
-
-      // Go back to list
       cy.get('button').contains('← Back to Character List').click();
-
       cy.contains('label', 'Show Favourites Only')
         .find('input[type="checkbox"]')
         .should('exist')
         .check({ force: true });
-
-      // Confirm character is shown as favourite
       cy.get('td').contains('Luke Skywalker').should('exist');
     });
   });

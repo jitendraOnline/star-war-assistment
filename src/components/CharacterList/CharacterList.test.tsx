@@ -36,7 +36,7 @@ describe('Character List Page', () => {
       await userEvent.type(input, 'Search Patel');
       expect(input).toHaveValue('Search Patel');
       await waitForLoadingToFinish();
-      expect(await screen.findByText(/Found 1 result for Search Patel./i)).toBeInTheDocument();
+      expect(await screen.findByText(/Showing 1–1 of 1/i)).toBeInTheDocument();
     });
   });
 
@@ -75,6 +75,8 @@ describe('Character List Page', () => {
       expect(characterName).toBeInTheDocument();
       const characteGender = await screen.findByText(/favourite gender/i);
       expect(characteGender).toBeInTheDocument();
+      const favouriteText = screen.getByText('Showing 1–1 of 1');
+      expect(favouriteText).toBeInTheDocument();
     });
   });
 });

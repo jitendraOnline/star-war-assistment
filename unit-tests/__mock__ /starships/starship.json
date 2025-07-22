@@ -16,7 +16,7 @@
         "max_atmosphering_speed": "1000",
         "crew": "5",
         "length": "38",
-        "model": "Sentinel-class landing craft",
+        "model": "modal craft1",
         "cost_in_credits": "240000",
         "manufacturer": "Sienar Fleet Systems, Cyngus Spaceworks",
         "pilots": ["https://www.swapi.tech/api/people/1"],
