@@ -8,8 +8,9 @@ import type {
 } from '@/types/character.type';
 
 export const useCharacters = (page: number, search: string, enabled: boolean) => {
+  const isSearch = search?.trim();
   return useQuery<CharacterListResponse>({
-    queryKey: ['characters', page, search],
+    queryKey: ['characters', isSearch ? '1' : page, search],
     enabled,
     staleTime: 1000 * 60 * 5,
     queryFn: async ({ signal }) => {

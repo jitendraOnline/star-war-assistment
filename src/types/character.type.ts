@@ -70,6 +70,7 @@ export interface FilmProperties {
   title: string;
   release_date: string;
   characters: string[];
+  episode_id: string;
   uid: string;
 }
 

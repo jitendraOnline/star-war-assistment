@@ -1,13 +1,42 @@
 import { useRef, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, Link } from 'react-router-dom';
 import { debounse } from '../../shared/utils';
 import { useCharacters } from '../../hooks/useCharacters';
 import { PAGE_LIMIT } from '../../shared/constants';
-import { CharacterRow } from './CharacterRow';
 import { useFavourites } from '../../hooks/useFavourites';
+import { usePlanetsByCharacter } from '@/hooks/usePlanetsByCharacter';
+import { PaginatedTable } from '../Shared/DataTable';
 import type { CharacterListItem } from '../../types/character.type';
 
-const TABLE_HEADERS = ['Name', 'Gender', 'Planet'];
+const PlanetDisplay = ({ homeworld }: { homeworld?: string }) => {
+  const { data: planet, isLoading, isError } = usePlanetsByCharacter(homeworld);
+
+  if (isLoading) return <span>Loading...</span>;
+  if (isError) return <span>Unknown</span>;
+  return <span>{planet?.[0]?.name || '-'}</span>;
+};
+
+const CharacterNameCell = ({ character }: { character: CharacterListItem }) => {
+  const [searchParams] = useSearchParams();
+  const { isFavourite } = useFavourites(character.uid);
+  const queryString = searchParams.toString();
+  const querySuffix = queryString ? `?${queryString}` : '';
+  return (
+    <div className="flex items-center">
+      <Link
+        to={`/characters/${character.uid}${querySuffix}`}
+        className="text-blue-600 hover:underline"
+      >
+        {character.properties?.name}
+      </Link>
+      {isFavourite && (
+        <span title="favourite" className="text-yellow-500 ml-1">
+          ★
+        </span>
+      )}
+    </div>
+  );
+};
 
 export const CharacterList = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -36,75 +65,48 @@ export const CharacterList = () => {
     debouncedSearch.current(value);
   };
 
-  const getDisplayText = () => {
-    if (isLoading) return '';
+  const getFavoritesData = () => {
+    const favList = Object.values(favourites);
+    const filteredFavorites = favList.filter((char) =>
+      char?.properties?.name?.toLowerCase()?.includes(search?.toLowerCase()?.trim())
+    );
 
-    const total = showFavouritesOnly
-      ? (Object.keys(favourites)?.length ?? 0)
-      : (data?.total_records ?? 0);
-
-    if (search) {
-      return `Found ${total} result${total !== 1 ? 's' : ''} for ${search}.${total === 0 ? ' Try a different name.' : ''}`;
-    }
-
-    const start = (page - 1) * PAGE_LIMIT + 1;
-    const end = Math.min(page * PAGE_LIMIT, total);
-    return `Showing ${start}-${end} of ${total}`;
+    return {
+      message: 'Favorites',
+      total_records: filteredFavorites.length,
+      total_pages: 1,
+      previous: null,
+      next: null,
+      results: filteredFavorites,
+    };
   };
 
-  const renderTableContent = () => {
-    if (showFavouritesOnly) {
-      const favList = Object.values(favourites);
-      return favList.length === 0 ? (
-        <tr>
-          <td colSpan={3} className="px-4 py-2 text-center text-gray-500">
-            No favourites added.
-          </td>
-        </tr>
-      ) : (
-        favList
-          ?.filter((char) => char?.properties?.name?.includes(search))
-          .map((char: CharacterListItem) => <CharacterRow key={char.uid} character={char} />)
-      );
-    }
+  const tableColumns = [
+    {
+      header: 'Name',
+      key: 'name',
+      render: (character: CharacterListItem) => <CharacterNameCell character={character} />,
+    },
+    {
+      header: 'Gender',
+      key: 'gender',
+      render: (character: CharacterListItem) => <span>{character.properties?.gender ?? '-'}</span>,
+    },
+    {
+      header: 'Planet',
+      key: 'planet',
+      render: (character: CharacterListItem) => (
+        <PlanetDisplay homeworld={character.properties?.homeworld} />
+      ),
+    },
+  ];
 
-    if (isLoading) {
-      return (
-        <tr>
-          <td colSpan={3} className="px-4 py-2 text-sm text-gray-600">
-            Loading...
-          </td>
-        </tr>
-      );
-    }
-
-    return (
-      data?.results?.map((character) => (
-        <CharacterRow key={character.uid} character={character} />
-      )) || []
-    );
-  };
-
-  if (isError) {
-    return (
-      <div className="p-4">
-        <div className="flex items-center gap-4 p-4 border border-red-200 bg-red-50 text-red-700 rounded">
-          <p className="text-sm font-medium">Error fetching characters.</p>
-          <button
-            onClick={() => refetch()}
-            className="text-sm text-blue-600 underline hover:text-blue-800 cursor-pointer"
-          >
-            Try again
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  const shouldShowPagination = !search && !showFavouritesOnly && data;
+  const currentData = showFavouritesOnly ? getFavoritesData() : data;
+  const currentLoading = showFavouritesOnly ? false : isLoading;
+  const currentError = showFavouritesOnly ? false : isError;
 
   return (
-    <div className="p-4 space-y-6">
+    <div className="p-4 space-y-3">
       <div className="flex gap-2 flex-wrap">
         <input
           type="text"
@@ -113,8 +115,7 @@ export const CharacterList = () => {
           onChange={handleSearch}
           className="w-full max-w-sm p-2 border border-gray-300 rounded"
         />
-
-        <label className="inline-flex items-center space-x-2 mb-2">
+        <label className="inline-flex items-center space-x-2 mb-2 cursor-pointer">
           <input
             type="checkbox"
             checked={showFavouritesOnly}
@@ -124,41 +125,39 @@ export const CharacterList = () => {
         </label>
       </div>
 
-      <p className="text-sm text-gray-700">{getDisplayText()}</p>
-
-      <div className="overflow-x-auto h-[400px] rounded shadow border border-gray-200">
-        <table className="min-w-full table-auto">
-          <thead className="bg-gray-100">
-            <tr>
-              {TABLE_HEADERS.map((header) => (
-                <th key={header} className="px-4 py-2 text-left text-sm font-medium text-gray-900">
-                  {header}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody className="bg-white">{renderTableContent()}</tbody>
-        </table>
+      <div>
+        <PaginatedTable
+          data={
+            currentData || {
+              message: '',
+              total_records: 0,
+              total_pages: 0,
+              previous: null,
+              next: null,
+              results: [],
+            }
+          }
+          pageLimit={PAGE_LIMIT}
+          isLoading={currentLoading}
+          isError={currentError}
+          onRetry={refetch}
+          currentPage={page}
+          onPageNumberChange={(newPage) => {
+            updatePage(newPage);
+          }}
+          getRowKey={(item) => item.uid}
+          columns={tableColumns}
+          emptyText={
+            showFavouritesOnly
+              ? Object.values(favourites).length === 0
+                ? 'No favourites added.'
+                : 'No matching favorites found.'
+              : search
+                ? `No characters found for "${search}". Try a different name.`
+                : 'No characters available'
+          }
+        />
       </div>
-
-      {shouldShowPagination && (
-        <div className="flex justify-between items-center pt-4">
-          <button
-            onClick={() => updatePage(page - 1)}
-            disabled={!data.previous}
-            className="px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
-          >
-            Previous
-          </button>
-          <button
-            onClick={() => updatePage(page + 1)}
-            disabled={!data.next}
-            className="px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
-          >
-            Next
-          </button>
-        </div>
-      )}
     </div>
   );
 };
