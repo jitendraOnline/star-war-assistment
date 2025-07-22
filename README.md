@@ -32,6 +32,8 @@ npm install
 npm run dev
 ```
 
+- open the url - http://localhost:5173/characters
+
 ## Running Tests
 
 We used Vitest and React Testing Library for testing.
@@ -85,4 +87,8 @@ npm run e2e:open
   #i have transformed the data so them we can display them on same table.
 
 - it would have been better we are using grpahql it would have enanched the network optimiztin.
- # right now we heavely caching all the network request.
+
+## Start Page
+<img width="1440" height="728" alt="image" src="https://github.com/user-attachments/assets/4334aeed-0ef6-446e-a473-be7c2eb4b00e" />
+
+
