@@ -1,13 +1,5 @@
-import React, { useMemo } from 'react';
-
-export interface PaginatedResponse<T> {
-  message: string;
-  total_records: number;
-  total_pages: number;
-  previous: string | null;
-  next: string | null;
-  results: T[];
-}
+import type { PaginatedResponse } from '@/types/character.type';
+import React, { useMemo, useState } from 'react';
 
 interface PaginatedTableProps<T> {
   data: PaginatedResponse<T>;
@@ -24,7 +16,6 @@ interface PaginatedTableProps<T> {
   loadingMessage?: string;
   isError?: boolean;
   onRetry?: () => void;
-  onPageChange?: (direction: 'next' | 'prev') => void;
   emptyText?: string;
   height?: string;
 }
@@ -32,50 +23,53 @@ interface PaginatedTableProps<T> {
 export function PaginatedTable<T>({
   data,
   pageLimit,
-  currentPage = 1,
+  currentPage,
   onPageNumberChange,
   columns,
   getRowKey,
   isLoading = false,
   isError = false,
   onRetry,
-  onPageChange,
   loadingMessage = 'Loading...',
   emptyText = 'No data available',
   height = '500px',
 }: PaginatedTableProps<T>) {
+  const [internalPage, setInternalPage] = useState(1);
+
   const isServerPaginated = data.next !== null || data.previous !== null;
+
+  const effectivePage = currentPage ?? internalPage;
+
+  const setPage = (page: number) => {
+    if (onPageNumberChange) {
+      onPageNumberChange(page);
+    }
+    if (currentPage === undefined) {
+      setInternalPage(page);
+    }
+  };
 
   const paginatedData = useMemo(() => {
     if (isServerPaginated) {
       return data.results;
     }
-    const startIndex = (currentPage - 1) * pageLimit;
+    const startIndex = (effectivePage - 1) * pageLimit;
     const endIndex = startIndex + pageLimit;
     return data.results.slice(startIndex, endIndex);
-  }, [data.results, currentPage, pageLimit, isServerPaginated]);
+  }, [data.results, effectivePage, pageLimit, isServerPaginated]);
 
   const totalPages = isServerPaginated
     ? data.total_pages
     : Math.ceil(data.results.length / pageLimit);
 
-  const startRecord = isServerPaginated
-    ? (data.total_pages - (data.total_pages - 1) - 1) * pageLimit + 1
-    : (currentPage - 1) * pageLimit + 1;
-
-  const endRecord = isServerPaginated
-    ? Math.min(startRecord + paginatedData.length - 1, data.total_records)
-    : Math.min(currentPage * pageLimit, data.results.length);
+  const startRecord = (effectivePage - 1) * pageLimit + 1;
+  const endRecord = Math.min(startRecord + paginatedData.length - 1, data.total_records);
 
   const handlePageChange = (direction: 'next' | 'prev') => {
-    if (isServerPaginated && onPageChange) {
-      onPageChange(direction);
-    } else if (onPageNumberChange) {
-      if (direction === 'next' && currentPage < totalPages) {
-        onPageNumberChange(currentPage + 1);
-      } else if (direction === 'prev' && currentPage > 1) {
-        onPageNumberChange(currentPage - 1);
-      }
+    if (direction === 'next' && effectivePage < totalPages) {
+      setPage(effectivePage + 1);
+    } else if (direction === 'prev' && effectivePage > 1) {
+      setPage(effectivePage - 1);
     }
   };
 
@@ -126,10 +120,7 @@ export function PaginatedTable<T>({
     return paginatedData.map((item) => (
       <tr key={getRowKey(item)} className="hover:bg-gray-50">
         {columns.map((column) => (
-          <td
-            key={column.key as string}
-            className="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
-          >
+          <td key={column.key} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
             {column.render
               ? column.render(item)
               : ((item as { [column.key]: string })[column.key] ?? '')}
@@ -143,36 +134,32 @@ export function PaginatedTable<T>({
     const shouldShowPagination =
       !isLoading && !isError && (paginatedData.length > 0 || isServerPaginated);
 
-    if (!shouldShowPagination) {
-      return null;
-    }
+    if (!shouldShowPagination) return null;
 
     return (
       <tr className="bg-gray-50 border-t-2 border-gray-200">
         <td colSpan={columns.length} className="px-6 py-3">
           <div className="flex items-center justify-between">
-            <div className="flex items-center text-sm text-gray-700">
-              <span>
-                Showing {startRecord}–{endRecord} of {data.total_records}
-              </span>
+            <div className="text-sm text-gray-700">
+              Showing {startRecord}-{endRecord} of {data.total_records}
             </div>
 
             <div className="flex items-center space-x-2">
               <button
                 onClick={() => handlePageChange('prev')}
-                disabled={isServerPaginated ? !data.previous : currentPage === 1}
+                disabled={effectivePage === 1 || (isServerPaginated && !data.previous)}
                 className="px-3 py-1 text-sm border border-gray-300 rounded-md bg-white text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 Previous
               </button>
 
               <span className="px-3 py-1 text-sm text-gray-700">
-                Page {currentPage} of {totalPages}
+                Page {effectivePage} of {totalPages}
               </span>
 
               <button
                 onClick={() => handlePageChange('next')}
-                disabled={isServerPaginated ? !data.next : currentPage === totalPages}
+                disabled={effectivePage === totalPages || (isServerPaginated && !data.next)}
                 className="px-3 py-1 text-sm border border-gray-300 rounded-md bg-white text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 Next
@@ -195,7 +182,7 @@ export function PaginatedTable<T>({
             <tr>
               {columns.map((column) => (
                 <th
-                  key={column.key as string}
+                  key={column.key}
                   className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b"
                 >
                   {column.header}
