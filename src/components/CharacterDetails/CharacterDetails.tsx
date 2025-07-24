@@ -247,7 +247,7 @@ function CharacterDetail() {
             <div className="bg-white/80 backdrop-blur-sm rounded-xl overflow-hidden shadow-lg border border-white/20 transition-all duration-300 hover:shadow-xl hover:bg-white/90">
               <PaginatedTable
                 data={filmsData}
-                pageLimit={6}
+                pageLimit={10}
                 height="450px"
                 isLoading={isFilmsLoading}
                 loadingMessage="Loading Films"
