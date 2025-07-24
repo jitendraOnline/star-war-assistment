@@ -59,6 +59,11 @@ export const CharacterList = () => {
       search,
     });
 
+  const handleShowOnlyFavourite = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setShowFavouritesOnly(e.target.checked);
+    updatePage(1);
+  };
+
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setInputValue(value);
@@ -116,11 +121,7 @@ export const CharacterList = () => {
           className="w-full max-w-sm p-2 border border-gray-300 rounded"
         />
         <label className="inline-flex items-center space-x-2 mb-2 cursor-pointer">
-          <input
-            type="checkbox"
-            checked={showFavouritesOnly}
-            onChange={(e) => setShowFavouritesOnly(e.target.checked)}
-          />
+          <input type="checkbox" checked={showFavouritesOnly} onChange={handleShowOnlyFavourite} />
           <span className="text-sm">Show Favourites Only</span>
         </label>
       </div>

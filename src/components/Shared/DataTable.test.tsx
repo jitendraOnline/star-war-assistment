@@ -1,6 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { PaginatedTable, type PaginatedResponse } from './DataTable';
+import { PaginatedTable } from './DataTable';
+import type { PaginatedResponse } from '@/types/character.type';
 
 interface TestUser {
   id: string;
@@ -170,7 +171,7 @@ describe('PaginatedTable', () => {
     it('shows correct pagination info for client-side pagination', () => {
       render(<PaginatedTable {...defaultProps} currentPage={1} />);
 
-      expect(screen.getByText('Showing 1–2 of 5')).toBeInTheDocument();
+      expect(screen.getByText('Showing 1-2 of 5')).toBeInTheDocument();
       expect(screen.getByText('Page 1 of 3')).toBeInTheDocument();
     });
 
@@ -211,42 +212,52 @@ describe('PaginatedTable', () => {
     it('identifies server-side pagination correctly', () => {
       const serverData = createMockData(mockUsers.slice(0, 2), 10, true, false);
 
-      render(<PaginatedTable {...defaultProps} data={serverData} />);
+      render(<PaginatedTable {...defaultProps} data={serverData} currentPage={1} />);
 
-      expect(screen.getByText('Showing 1–2 of 10')).toBeInTheDocument();
+      expect(screen.getByText('Showing 1-2 of 10')).toBeInTheDocument();
     });
 
     it('handles server-side next page click', () => {
-      const mockOnPageChange = vi.fn();
+      const mockOnPageNumberChange = vi.fn();
       const serverData = createMockData(mockUsers.slice(0, 2), 10, true, false);
 
       render(
-        <PaginatedTable {...defaultProps} data={serverData} onPageChange={mockOnPageChange} />
+        <PaginatedTable
+          {...defaultProps}
+          data={serverData}
+          currentPage={1}
+          onPageNumberChange={mockOnPageNumberChange}
+        />
       );
 
       fireEvent.click(screen.getByText('Next'));
-      expect(mockOnPageChange).toHaveBeenCalledWith('next');
+      expect(mockOnPageNumberChange).toHaveBeenCalledWith(2);
     });
 
     it('handles server-side previous page click', () => {
-      const mockOnPageChange = vi.fn();
+      const mockOnPageNumberChange = vi.fn();
       const serverData = createMockData(mockUsers.slice(2, 4), 10, true, true);
 
       render(
-        <PaginatedTable {...defaultProps} data={serverData} onPageChange={mockOnPageChange} />
+        <PaginatedTable
+          {...defaultProps}
+          data={serverData}
+          currentPage={2}
+          onPageNumberChange={mockOnPageNumberChange}
+        />
       );
 
       fireEvent.click(screen.getByText('Previous'));
-      expect(mockOnPageChange).toHaveBeenCalledWith('prev');
+      expect(mockOnPageNumberChange).toHaveBeenCalledWith(1);
     });
 
     it('disables navigation buttons based on server data', () => {
-      const serverData = createMockData(mockUsers.slice(0, 2), 10, false, true);
+      const serverData = createMockData(mockUsers.slice(0, 2), 10, false, false);
 
-      render(<PaginatedTable {...defaultProps} data={serverData} />);
+      render(<PaginatedTable {...defaultProps} data={serverData} currentPage={1} />);
 
       expect(screen.getByText('Next')).toBeDisabled();
-      expect(screen.getByText('Previous')).not.toBeDisabled();
+      expect(screen.getByText('Previous')).toBeDisabled();
     });
   });
 
