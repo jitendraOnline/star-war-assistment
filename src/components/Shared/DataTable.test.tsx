@@ -1,6 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { PaginatedTable, type PaginatedResponse } from './DataTable';
+import { PaginatedTable } from './DataTable';
+import type { PaginatedResponse } from '@/types/character.type';
 
 interface TestUser {
   id: string;
