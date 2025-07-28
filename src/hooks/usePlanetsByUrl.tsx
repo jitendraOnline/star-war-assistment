@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import type { PlanetProperties } from '../types/character.type';
 import { fetchPlanets } from '@/service/planet.service';
 
-export const usePlanetsByCharacter = (peopleUrl?: string) => {
+export const usePlanetsByUrl = (planetUrl?: string) => {
   return useQuery<PlanetProperties[]>({
     queryKey: ['all-planets'],
     queryFn: async ({ signal }) => {
@@ -14,8 +14,8 @@ export const usePlanetsByCharacter = (peopleUrl?: string) => {
     staleTime: 1000 * 60 * 10,
     enabled: true,
     select: (planets) => {
-      if (!peopleUrl) return [];
-      return planets.filter((planet) => planet.url.includes(peopleUrl));
+      if (!planetUrl) return [];
+      return planets.filter((planet) => planet.url === planetUrl);
     },
   });
 };

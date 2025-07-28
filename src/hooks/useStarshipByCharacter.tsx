@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { fetchStarshipsPage } from '../service/starship.service';
 import type { StarshipProperties } from '../types/character.type';
 
-export const useStarshipsByCharacter = (peopleUrl?: string) => {
+export const useStarshipsByCharacter = (characterUrl?: string) => {
   return useQuery<StarshipProperties[]>({
     queryKey: ['all-starships'],
     queryFn: async ({ signal }) => {
@@ -14,8 +14,8 @@ export const useStarshipsByCharacter = (peopleUrl?: string) => {
     staleTime: 1000 * 60 * 10,
     enabled: true,
     select: (allStarships) => {
-      if (!peopleUrl) return [];
-      return allStarships.filter((ship) => ship.pilots.includes(peopleUrl));
+      if (!characterUrl) return [];
+      return allStarships.filter((ship) => ship.pilots.includes(characterUrl));
     },
   });
 };

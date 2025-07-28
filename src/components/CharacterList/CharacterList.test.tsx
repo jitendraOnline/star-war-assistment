@@ -2,6 +2,9 @@ import userEvent from '@testing-library/user-event';
 import CharacterList from './CharacterList';
 import { renderWithClientProdider, waitForLoadingToFinish } from '../../../unit-tests/helper';
 import { localStorageFavouriteKey } from '../../hooks/useFavourites';
+import { within } from '@testing-library/react';
+import { server } from '../../../unit-tests/mockserver';
+import { http, HttpResponse } from 'msw';
 
 describe('Character List Page', () => {
   describe('Basic renderWithClientProdidering', () => {
@@ -10,22 +13,47 @@ describe('Character List Page', () => {
       const laodingText = await screen.getByText(/loading/i);
       expect(laodingText).toBeInTheDocument();
     });
-    it('should renderWithClientProdider character name, planet and gender', async () => {
+    it('should show character name, planet and gender', async () => {
       const screen = renderWithClientProdider(<CharacterList />);
       await waitForLoadingToFinish();
-      const characterName = await screen.findByText(/Luke Skywalker/i);
-      expect(characterName).toBeInTheDocument();
-      const characteGender = await screen.findByText(/luke gender/i);
-      expect(characteGender).toBeInTheDocument();
+
+      const row = await screen.findByRole('row', { name: /Luke Skywalker/i });
+      const characterLink = within(row).getByRole('link', { name: /Luke Skywalker/i });
+      expect(characterLink).toBeInTheDocument();
+      const genderCell = within(row).getByRole('cell', { name: /luke gender/i });
+      expect(genderCell).toBeInTheDocument();
+      const planetCell = await within(row).findByRole('cell', { name: /Tatooine/i });
+      expect(planetCell).toBeInTheDocument();
+    });
+  });
+
+  describe('Error from getCharacter api', () => {
+    it('should show somethign went wrong', async () => {
+      server.use(
+        http.get('https://www.swapi.tech/api/people', () => {
+          return new HttpResponse(null, { status: 500, statusText: 'Internal Server Error' });
+        })
+      );
+      const screen = renderWithClientProdider(<CharacterList />);
+      await waitForLoadingToFinish();
+      const tryAgainButton = await screen.findByRole('button', { name: /Try Again/i });
+      expect(tryAgainButton).toBeInTheDocument();
+      expect(screen.getByText(/Something went wrong/i)).toBeInTheDocument();
+      server.resetHandlers();
+      await userEvent.click(tryAgainButton);
+
+      const tryAgainButton1 = await screen.queryByRole('button', { name: /Try Again/i });
+      expect(tryAgainButton1).not.toBeInTheDocument();
     });
   });
 
   describe('Pagination', () => {
-    it('should show pagination buttons and allow navigation', async () => {
+    it('should show pagination buttons and allow navigation. next button should be enabled as we have nextPage true from mock data', async () => {
       const screen = renderWithClientProdider(<CharacterList />);
       await waitForLoadingToFinish();
       expect(await screen.findByRole('button', { name: /Previous/i })).toBeDisabled();
-      expect(await screen.findByRole('button', { name: /Next/i })).toBeEnabled();
+      const nextButton = await screen.findByRole('button', { name: /Next/i });
+      expect(nextButton).toBeEnabled();
     });
   });
 
@@ -36,6 +64,9 @@ describe('Character List Page', () => {
       await userEvent.type(input, 'Search Patel');
       expect(input).toHaveValue('Search Patel');
       await waitForLoadingToFinish();
+      const row = await screen.findByRole('row', { name: /Search Patel/i });
+      const characterLink = within(row).getByRole('link', { name: /Search Patel/i });
+      expect(characterLink).toBeInTheDocument();
       expect(await screen.findByText(/Showing 1-1 of 1/i)).toBeInTheDocument();
     });
   });
@@ -71,10 +102,15 @@ describe('Character List Page', () => {
       expect(toggle).toBeInTheDocument();
       await userEvent.click(toggle);
 
-      const characterName = await screen.findByText(/Favourite Character/i);
-      expect(characterName).toBeInTheDocument();
-      const characteGender = await screen.findByText(/favourite gender/i);
-      expect(characteGender).toBeInTheDocument();
+      const characterRow = await screen.findByRole('row', { name: /Favourite Character/i });
+      const characterLink = within(characterRow).getByRole('link', {
+        name: /Favourite Character/i,
+      });
+      const favouriteGender = within(characterRow).getByRole('cell', {
+        name: /favourite gender/i,
+      });
+      expect(characterLink).toBeInTheDocument();
+      expect(favouriteGender).toBeInTheDocument();
       const favouriteText = screen.getByText('Showing 1-1 of 1');
       expect(favouriteText).toBeInTheDocument();
     });

@@ -1,7 +1,6 @@
-import { renderWithClientProdider } from '../../../unit-tests/helper';
+import { renderWithClientProdider, waitForLoadingToFinish } from '../../../unit-tests/helper';
 import CharacterDetails from './CharacterDetails';
 import { screen } from '@testing-library/react';
-import { waitForElementToBeRemoved } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
@@ -27,7 +26,6 @@ describe('CharacterDetails', () => {
   it('should load and display character details', async () => {
     const loadingText = await screen.findByText(/Loading character details.../i);
     expect(loadingText).toBeInTheDocument();
-
     expect(await screen.findByText(/Luke Skywalker/i)).toBeInTheDocument();
     expect(await screen.findByText(/Male/i)).toBeInTheDocument();
     expect(await screen.findByText(/blond/i)).toBeInTheDocument();
@@ -35,21 +33,13 @@ describe('CharacterDetails', () => {
   });
 
   it('should display character films', async () => {
-    const loadingText = await screen.getByText(/Loading Films/i);
-    expect(loadingText).toBeInTheDocument();
-
-    await waitForElementToBeRemoved(loadingText);
-
+    await waitForLoadingToFinish('Loading Films');
     expect(await screen.findByText(/A New Hope/i)).toBeInTheDocument();
     expect(screen.getByText(/The Empire Strikes Back/i)).toBeInTheDocument();
   });
 
   it('should display character starship', async () => {
-    const loadingText = await screen.findByText(/Loading StarShips.../i);
-    expect(loadingText).toBeInTheDocument();
-
-    await waitForElementToBeRemoved(loadingText);
-
+    await waitForLoadingToFinish('Loading StarShips...');
     expect(await screen.findByText(/Sentinel-class landing craft/i)).toBeInTheDocument();
   });
 
@@ -64,9 +54,7 @@ describe('CharacterDetails', () => {
     expect(favouriteButton).toBeInTheDocument();
     expect(favouriteButton).toBeDisabled();
     expect(favouriteButton).toHaveTextContent('☆ Favourite');
-    const loadingText = await screen.findByText(/Loading character details.../i);
-    expect(loadingText).toBeInTheDocument();
-    await waitForElementToBeRemoved(() => screen.queryByText(/Loading character details.../i));
+    await waitForLoadingToFinish('Loading character details...');
     expect(favouriteButton).toBeEnabled();
     await userEvent.click(favouriteButton);
     expect(favouriteButton).toBeInTheDocument();

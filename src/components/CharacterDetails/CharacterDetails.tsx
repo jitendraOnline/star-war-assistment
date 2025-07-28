@@ -3,9 +3,84 @@ import { useCharacterDetail } from '../../hooks/useCharacterDetails';
 import { useFilmByCharacter } from '../../hooks/useFilmByCharacter';
 import { useStarshipsByCharacter } from '../../hooks/useStarshipByCharacter';
 import { useFavourites } from '../../hooks/useFavourites';
-import { usePlanetsByCharacter } from '@/hooks/usePlanetsByCharacter';
+import { usePlanetsByUrl } from '@/hooks/usePlanetsByUrl';
 import { PaginatedTable } from '../Shared/DataTable';
 import type { FilmProperties, StarshipProperties } from '../../types/character.type';
+
+interface InfoCardProps {
+  label: string;
+  value: React.ReactNode;
+}
+
+export const InfoCard: React.FC<InfoCardProps> = ({ label, value }) => {
+  return (
+    <div className="flex items-center space-x-4 p-4 rounded-xl bg-gradient-to-r from-blue-50 to-blue-100 border border-blue-200">
+      <div className="w-4 h-4 bg-blue-400 rounded-full flex-shrink-0" />
+      <div>
+        <span className="text-xs font-medium text-blue-600 uppercase tracking-wide">{label}</span>
+        <p className="text-gray-900 font-semibold text-lg">{value}</p>
+      </div>
+    </div>
+  );
+};
+
+const filmColumns = [
+  {
+    header: 'Title',
+    key: 'title',
+    render: (film: FilmProperties) => (
+      <div className="flex items-center">
+        <div className="w-2 h-2 bg-yellow-400 rounded-full mr-3 flex-shrink-0"></div>
+        <span className="font-semibold text-gray-900">{film.title}</span>
+      </div>
+    ),
+  },
+  {
+    header: 'Release Date',
+    key: 'release_date',
+    render: (film: FilmProperties) => (
+      <span className="text-gray-600 text-sm">{film.release_date}</span>
+    ),
+  },
+  {
+    header: 'Episode',
+    key: 'episode_id',
+    render: (film: FilmProperties) => (
+      <div className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+        Episode {film.episode_id}
+      </div>
+    ),
+  },
+];
+
+const starshipColumns = [
+  {
+    header: 'Name',
+    key: 'name',
+    render: (starship: StarshipProperties) => (
+      <div className="flex items-center">
+        <div className="w-2 h-2 bg-indigo-400 rounded-full mr-3 flex-shrink-0"></div>
+        <span className="font-semibold text-gray-900">{starship.name}</span>
+      </div>
+    ),
+  },
+  {
+    header: 'Model',
+    key: 'model',
+    render: (starship: StarshipProperties) => (
+      <span className="text-gray-600 text-sm">{starship.model || '-'}</span>
+    ),
+  },
+  {
+    header: 'Class',
+    key: 'starship_class',
+    render: (starship: StarshipProperties) => (
+      <div className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+        {starship.starship_class || '-'}
+      </div>
+    ),
+  },
+];
 
 function CharacterDetail() {
   const { id } = useParams<{ id: string }>();
@@ -20,7 +95,7 @@ function CharacterDetail() {
     data: planet,
     isLoading: isPlanetLoading,
     isError: isPlanetError,
-  } = usePlanetsByCharacter(character?.homeworld);
+  } = usePlanetsByUrl(character?.homeworld);
 
   const {
     data: films,
@@ -52,88 +127,6 @@ function CharacterDetail() {
     results: starships || [],
   };
 
-  const filmColumns = [
-    {
-      header: 'Title',
-      key: 'title',
-      render: (film: FilmProperties) => (
-        <div className="flex items-center">
-          <div className="w-2 h-2 bg-yellow-400 rounded-full mr-3 flex-shrink-0"></div>
-          <span className="font-semibold text-gray-900">{film.title}</span>
-        </div>
-      ),
-    },
-    {
-      header: 'Release Date',
-      key: 'release_date',
-      render: (film: FilmProperties) => (
-        <span className="text-gray-600 text-sm">{film.release_date}</span>
-      ),
-    },
-    {
-      header: 'Episode',
-      key: 'episode_id',
-      render: (film: FilmProperties) => (
-        <div className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-          Episode {film.episode_id}
-        </div>
-      ),
-    },
-  ];
-
-  const starshipColumns = [
-    {
-      header: 'Name',
-      key: 'name',
-      render: (starship: StarshipProperties) => (
-        <div className="flex items-center">
-          <div className="w-2 h-2 bg-indigo-400 rounded-full mr-3 flex-shrink-0"></div>
-          <span className="font-semibold text-gray-900">{starship.name}</span>
-        </div>
-      ),
-    },
-    {
-      header: 'Model',
-      key: 'model',
-      render: (starship: StarshipProperties) => (
-        <span className="text-gray-600 text-sm">{starship.model || '-'}</span>
-      ),
-    },
-    {
-      header: 'Class',
-      key: 'starship_class',
-      render: (starship: StarshipProperties) => (
-        <div className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
-          {starship.starship_class || '-'}
-        </div>
-      ),
-    },
-  ];
-
-  if (isError) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
-        <div className="max-w-4xl mx-auto">
-          <div className="bg-red-50 border-l-4 border-red-400 p-6 rounded-lg shadow-sm">
-            <div className="flex items-center">
-              <div className="ml-3">
-                <p className="text-red-700 font-medium">Error loading character.</p>
-                <div className="mt-2">
-                  <button
-                    onClick={() => refetch()}
-                    className="text-sm bg-red-100 hover:bg-red-200 text-red-800 px-3 py-1 rounded-md transition-colors duration-200"
-                  >
-                    Retry
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
       <div className="max-w-7xl mx-auto p-6 space-y-8">
@@ -164,14 +157,37 @@ function CharacterDetail() {
           </button>
         </div>
 
-        {isLoading ? (
+        {isError && (
+          <div className=" bg-gradient-to-br from-gray-50 to-gray-100 p-6">
+            <div className="max-w-4xl mx-auto">
+              <div className="bg-red-50 border-l-4 border-red-400 p-6 rounded-lg shadow-sm">
+                <div className="flex items-center">
+                  <div className="ml-3">
+                    <p className="text-red-700 font-medium">Error loading character.</p>
+                    <div className="mt-2">
+                      <button
+                        onClick={() => refetch()}
+                        className="text-sm bg-red-100 hover:bg-red-200 text-red-800 px-3 py-1 rounded-md transition-colors duration-200"
+                      >
+                        Retry
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {isLoading && (
           <div className="flex items-center justify-center py-20">
             <div className="flex items-center space-x-4">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
               <span className="text-gray-600 font-medium">Loading character details...</span>
             </div>
           </div>
-        ) : (
+        )}
+        {!(isError || isLoading) && (
           <>
             <div className="text-center">
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent mb-4">
@@ -181,56 +197,24 @@ function CharacterDetail() {
             </div>
             <div className="bg-white/90 backdrop-blur-md p-6 md:p-8 lg:p-10 rounded-2xl shadow-xl border border-white/30">
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
-                <div className="flex items-center space-x-4 p-4 rounded-xl bg-gradient-to-r from-blue-50 to-blue-100 border border-blue-200">
-                  <div className="w-4 h-4 bg-blue-400 rounded-full flex-shrink-0"></div>
-                  <div>
-                    <span className="text-xs font-medium text-blue-600 uppercase tracking-wide">
-                      Gender
-                    </span>
-                    <p className="text-gray-900 font-semibold text-lg">{character?.gender}</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center space-x-4 p-4 rounded-xl bg-gradient-to-r from-green-50 to-green-100 border border-green-200">
-                  <div className="w-4 h-4 bg-green-400 rounded-full flex-shrink-0"></div>
-                  <div>
-                    <span className="text-xs font-medium text-green-600 uppercase tracking-wide">
-                      Hair Color
-                    </span>
-                    <p className="text-gray-900 font-semibold text-lg">{character?.hair_color}</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center space-x-4 p-4 rounded-xl bg-gradient-to-r from-purple-50 to-purple-100 border border-purple-200">
-                  <div className="w-4 h-4 bg-purple-400 rounded-full flex-shrink-0"></div>
-                  <div>
-                    <span className="text-xs font-medium text-purple-600 uppercase tracking-wide">
-                      Eye Color
-                    </span>
-                    <p className="text-gray-900 font-semibold text-lg">{character?.eye_color}</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center space-x-4 p-4 rounded-xl bg-gradient-to-r from-red-50 to-red-100 border border-red-200">
-                  <div className="w-4 h-4 bg-red-400 rounded-full flex-shrink-0"></div>
-                  <div>
-                    <span className="text-xs font-medium text-red-600 uppercase tracking-wide">
-                      Home Planet
-                    </span>
-                    <p className="text-gray-900 font-semibold text-lg">
-                      {isPlanetLoading ? (
-                        <span className="flex items-center">
-                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-400 mr-2"></div>
-                          Loading...
-                        </span>
-                      ) : isPlanetError ? (
-                        'Unknown'
-                      ) : (
-                        (planet?.[0]?.name ?? '-')
-                      )}
-                    </p>
-                  </div>
-                </div>
+                <InfoCard label="Gender" value={character?.gender || '-'} />
+                <InfoCard label="Hair Color" value={character?.hair_color || '-'} />
+                <InfoCard label="Eye Color" value={character?.eye_color || '-'} />
+                <InfoCard
+                  label="Home Planet"
+                  value={
+                    isPlanetLoading ? (
+                      <span className="flex items-center">
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-400 mr-2" />
+                        Loading...
+                      </span>
+                    ) : isPlanetError ? (
+                      'Unknown'
+                    ) : (
+                      (planet?.[0]?.name ?? '-')
+                    )
+                  }
+                />
               </div>
             </div>
           </>

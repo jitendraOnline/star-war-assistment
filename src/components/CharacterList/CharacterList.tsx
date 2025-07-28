@@ -4,14 +4,13 @@ import { debounse } from '../../shared/utils';
 import { useCharacters } from '../../hooks/useCharacters';
 import { PAGE_LIMIT } from '../../shared/constants';
 import { useFavourites } from '../../hooks/useFavourites';
-import { usePlanetsByCharacter } from '@/hooks/usePlanetsByCharacter';
+import { usePlanetsByUrl } from '@/hooks/usePlanetsByUrl';
 import { PaginatedTable } from '../Shared/DataTable';
 import type { CharacterListItem } from '../../types/character.type';
 
 const PlanetDisplay = ({ homeworld }: { homeworld?: string }) => {
-  const { data: planet, isLoading, isError } = usePlanetsByCharacter(homeworld);
-
-  if (isLoading) return <span>Loading...</span>;
+  const { data: planet, isLoading, isError } = usePlanetsByUrl(homeworld);
+  if (isLoading) return <span role="status">Loading...</span>;
   if (isError) return <span>Unknown</span>;
   return <span>{planet?.[0]?.name || '-'}</span>;
 };

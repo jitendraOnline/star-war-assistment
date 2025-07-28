@@ -18,6 +18,7 @@ interface PaginatedTableProps<T> {
   onRetry?: () => void;
   emptyText?: string;
   height?: string;
+  width?: string;
 }
 
 export function PaginatedTable<T>({
@@ -80,7 +81,9 @@ export function PaginatedTable<T>({
           <td colSpan={columns.length} className="px-6 py-8 text-center">
             <div className="flex items-center justify-center">
               <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
-              <span className="ml-2 text-gray-600">{loadingMessage}</span>
+              <span className="ml-2 text-gray-600" role="status">
+                {loadingMessage}
+              </span>
             </div>
           </td>
         </tr>
@@ -172,10 +175,7 @@ export function PaginatedTable<T>({
   };
 
   return (
-    <div
-      className="w-full border border-gray-200 rounded-lg shadow-sm overflow-hidden"
-      style={{ height }}
-    >
+    <div className="w-full border border-gray-200 rounded-lg shadow-sm " style={{ height }}>
       <div className="h-full flex flex-col overflow-auto relative">
         <table className="min-w-full bg-white">
           <thead className="bg-gray-50 sticky top-0 z-10">
