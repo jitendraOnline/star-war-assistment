@@ -1,0 +1,5 @@
+echo "Husky running.." 
+echo "Checking linting error:-" 
+npm run lint
+echo "Checking formatting error:-" 
+npm run format

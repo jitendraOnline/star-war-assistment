@@ -108,7 +108,6 @@ export const CharacterList = () => {
   const currentData = showFavouritesOnly ? getFavoritesData() : data;
   const currentLoading = showFavouritesOnly ? false : isLoading;
   const currentError = showFavouritesOnly ? false : isError;
-
   return (
     <div className="p-4 space-y-3">
       <div className="flex gap-2 flex-wrap">
