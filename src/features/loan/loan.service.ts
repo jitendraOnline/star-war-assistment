@@ -104,7 +104,7 @@ export function subscribeToLoans(
         onData([]);
       }
     },
-    (err) => {
+    (err: Error) => {
       onError(err);
     }
   );
@@ -176,7 +176,7 @@ export function subscribeLoanById(
         onData(null);
       }
     },
-    (error) => onError(error)
+    (error: Error) => onError(error)
   );
   return unsubscribe;
 }

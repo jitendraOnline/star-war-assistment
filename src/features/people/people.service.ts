@@ -1,5 +1,5 @@
 import { database } from '@/service/firebase';
-import { ref, onValue, push, remove, DataSnapshot } from 'firebase/database';
+import { ref, onValue, push, remove, update, DataSnapshot } from 'firebase/database';
 
 export interface Person {
   id: string;
@@ -38,7 +38,7 @@ export function subscribeToPeople(
         onData([]);
       }
     },
-    (err) => {
+    (err: Error) => {
       onError(err);
     }
   );
@@ -50,10 +50,7 @@ export async function addPerson(userId: string, person: Omit<Person, 'id'>) {
 }
 
 export async function updatePerson(userId: string, id: string, person: Omit<Person, 'id'>) {
-  // Only update the fields, not the id
-  await import('firebase/database').then(({ update }) =>
-    update(ref(database, `users/${userId}/people/${id}`), person)
-  );
+  await update(ref(database, `users/${userId}/people/${id}`), person);
 }
 
 export async function deletePerson(userId: string, id: string) {
