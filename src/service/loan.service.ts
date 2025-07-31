@@ -31,7 +31,7 @@ export function subscribeToLoans(onData: (loans: Loan[]) => void, onError: (erro
         onData([]);
       }
     },
-    (err) => {
+    (err: Error) => {
       onError(err);
     }
   );
@@ -88,7 +88,7 @@ export function subscribeToLoanPayments(
         onData([]);
       }
     },
-    (err) => {
+    (err: Error) => {
       onError(err);
     }
   );

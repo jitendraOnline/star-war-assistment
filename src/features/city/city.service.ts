@@ -26,7 +26,7 @@ export function subscribeToCities(
         onData([]);
       }
     },
-    (err) => {
+    (err: Error) => {
       onError(err);
     }
   );
