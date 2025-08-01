@@ -12,6 +12,7 @@ import { Navigate, Outlet, type RouteObject } from 'react-router-dom';
 
 import AuthGuard from './AuthGuard';
 import { DataProvider } from '@/contexts/DataContext';
+import { CitiesProvider } from '@/contexts/CitiesContext';
 import { UserProvider } from '@/contexts/UserContext';
 
 import CityListPage from '@/features/city/CityListPage';
@@ -29,14 +30,16 @@ export const routes: RouteObject[] = [
     element: (
       <AuthGuard>
         <UserProvider>
-          <DataProvider>
-            <div className="flex h-[100vh] w-[100vw] flex-col">
-              <NavBar />
-              <main className="flex-1 overflow-auto p-4 bg-white/80">
-                <Outlet />
-              </main>
-            </div>
-          </DataProvider>
+          <CitiesProvider>
+            <DataProvider>
+              <div className="flex h-[100vh] w-[100vw] flex-col">
+                <NavBar />
+                <main className="flex-1 overflow-auto p-4 bg-white/80">
+                  <Outlet />
+                </main>
+              </div>
+            </DataProvider>
+          </CitiesProvider>
         </UserProvider>
       </AuthGuard>
     ),

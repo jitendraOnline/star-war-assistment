@@ -8,14 +8,14 @@ import { getAuth } from 'firebase/auth';
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: 'AIzaSyDQyq0I_30gMgP1FQpZ3nBmShzEpxcI4yY',
-  authDomain: 'evolenthealth-6c599.firebaseapp.com',
-  databaseURL: 'https://evolenthealth-6c599.firebaseio.com',
-  projectId: 'evolenthealth-6c599',
-  storageBucket: 'evolenthealth-6c599.firebasestorage.app',
-  messagingSenderId: '874582586649',
-  appId: '1:874582586649:web:047df1d8b5cd99da3d4188',
-  measurementId: 'G-5H512MJRFC',
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 };
 
 // Initialize Firebase

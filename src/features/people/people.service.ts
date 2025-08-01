@@ -1,5 +1,5 @@
 import { database } from '@/service/firebase';
-import { ref, onValue, push, remove, update, DataSnapshot } from 'firebase/database';
+import { ref, onValue, push, remove, update, DataSnapshot, off } from 'firebase/database';
 
 export interface Person {
   id: string;
@@ -17,32 +17,40 @@ export function subscribeToPeople(
   onError: (error: Error) => void
 ) {
   const peopleRef = ref(database, `users/${userId}/people`);
-  const unsubscribe = onValue(
-    peopleRef,
-    (snapshot: DataSnapshot) => {
+
+  const handleSnapshot = (snapshot: DataSnapshot) => {
+    try {
       const data = snapshot.val();
       if (data) {
-        onData(
-          Object.entries(data).map(([id, value]) => ({
-            id,
-            name: (value as Record<string, unknown>).name as string,
-            balance: (value as Record<string, unknown>).balance as number,
-            cityId: (value as Record<string, unknown>).cityId as string,
-            aadhaar: ((value as Record<string, unknown>).aadhaar as string) || '',
-            petName: ((value as Record<string, unknown>).petName as string) || '',
-            gender:
-              ((value as Record<string, unknown>).gender as 'male' | 'female' | 'other') || 'male',
-          }))
-        );
+        const people = Object.entries(data).map(([id, value]) => ({
+          id,
+          name: (value as Record<string, unknown>).name as string,
+          balance: (value as Record<string, unknown>).balance as number,
+          cityId: (value as Record<string, unknown>).cityId as string,
+          aadhaar: ((value as Record<string, unknown>).aadhaar as string) || '',
+          petName: ((value as Record<string, unknown>).petName as string) || '',
+          gender:
+            ((value as Record<string, unknown>).gender as 'male' | 'female' | 'other') || 'male',
+        }));
+        onData(people);
       } else {
         onData([]);
       }
-    },
-    (err: Error) => {
-      onError(err);
+    } catch (error) {
+      onError(error as Error);
     }
-  );
-  return unsubscribe;
+  };
+
+  const handleError = (error: Error) => {
+    onError(error);
+  };
+
+  onValue(peopleRef, handleSnapshot, handleError);
+
+  // Return unsubscribe function
+  return () => {
+    off(peopleRef, 'value', handleSnapshot);
+  };
 }
 
 export async function addPerson(userId: string, person: Omit<Person, 'id'>) {
