@@ -8,6 +8,7 @@ export interface Person {
   cityId: string;
   aadhaar?: string;
   petName?: string;
+  phone?: string;
   gender?: 'male' | 'female' | 'other';
 }
 
@@ -29,6 +30,7 @@ export function subscribeToPeople(
           cityId: (value as Record<string, unknown>).cityId as string,
           aadhaar: ((value as Record<string, unknown>).aadhaar as string) || '',
           petName: ((value as Record<string, unknown>).petName as string) || '',
+          phone: ((value as Record<string, unknown>).phone as string) || '',
           gender:
             ((value as Record<string, unknown>).gender as 'male' | 'female' | 'other') || 'male',
         }));

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { subscribeToCities, addCity, deleteCity, type City } from './city.service';
+import CityCard from './CityCard';
 
 const CityListPage: React.FC = () => {
   const [cities, setCities] = useState<City[]>([]);
@@ -65,20 +66,32 @@ const CityListPage: React.FC = () => {
       ) : cities.length === 0 ? (
         <div className="text-gray-500">No cities found.</div>
       ) : (
-        <ul className="divide-y divide-gray-200 bg-white rounded shadow">
-          {cities.map((city) => (
-            <li key={city.id} className="flex items-center justify-between px-4 py-3">
-              <span>{city.name}</span>
-              <button
-                disabled={true}
-                onClick={() => handleDeleteCity(city.id)}
-                className="text-red-600 hover:underline text-sm"
-              >
-                Delete
-              </button>
-            </li>
-          ))}
-        </ul>
+        <>
+          {/* Mobile Card View */}
+          <div className="block md:hidden space-y-3">
+            {cities.map((city) => (
+              <CityCard key={city.id} city={city} onDelete={handleDeleteCity} />
+            ))}
+          </div>
+
+          {/* Desktop List View */}
+          <div className="hidden md:block">
+            <ul className="divide-y divide-gray-200 bg-white rounded shadow">
+              {cities.map((city) => (
+                <li key={city.id} className="flex items-center justify-between px-4 py-3">
+                  <span className="text-gray-900 font-medium">{city.name}</span>
+                  <button
+                    disabled={true}
+                    onClick={() => handleDeleteCity(city.id)}
+                    className="text-red-600 hover:text-red-800 text-sm font-medium px-3 py-1 rounded-md hover:bg-red-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Delete
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </>
       )}
     </div>
   );

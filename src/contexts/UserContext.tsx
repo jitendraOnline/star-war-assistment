@@ -6,6 +6,7 @@ interface UserContextType {
   user: User | null;
   loading: boolean;
   userId: string | null;
+  logout: () => Promise<void>;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -15,7 +16,7 @@ interface UserProviderProps {
 }
 
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
-  const { user, loading } = useAuthUser();
+  const { user, loading, logout } = useAuthUser();
 
   return (
     <UserContext.Provider
@@ -23,6 +24,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         user,
         loading,
         userId: user?.uid || null,
+        logout,
       }}
     >
       {children}

@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import type { Loan } from './loan.service';
 import type { Person } from '../people/people.service';
+import LoanCard from './LoanCard';
 import {
   calculateTotalAmount,
   isLoanOverdue,
@@ -141,8 +142,23 @@ const LoanTable: React.FC<LoanTableProps> = ({ loans, people, onDelete, onView }
         Showing {filteredAndSortedLoans.length} of {loans.length} loans
       </div>
 
-      {/* Table */}
-      <div className="overflow-x-auto bg-white rounded-lg shadow">
+      {/* Mobile Card View */}
+      <div className="block lg:hidden">
+        <div className="grid gap-4">
+          {filteredAndSortedLoans.map((loan) => (
+            <LoanCard
+              key={loan.id}
+              loan={loan}
+              people={people}
+              onDelete={onDelete}
+              onView={onView}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Desktop Table View */}
+      <div className="hidden lg:block overflow-x-auto bg-white rounded-lg shadow">
         <table className="min-w-full">
           <thead className="bg-gray-50">
             <tr>
@@ -209,7 +225,7 @@ const LoanTable: React.FC<LoanTableProps> = ({ loans, people, onDelete, onView }
                   {formatDate(loan.startDate)}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {calculateLoanAge(loan)}
+                  {calculateLoanAge(loan)} days
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {formatDate(loan.dueDate)}
