@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import type { Person } from './people.service';
 import type { City } from '../city/city.service';
 import { Link } from 'react-router-dom';
+import PersonCard from './PersonCard';
 
 interface FilterablePersonTableProps {
   people: Person[];
@@ -72,7 +73,7 @@ const FilterablePersonTable: React.FC<FilterablePersonTableProps> = ({
       {/* Filters */}
       <div className="bg-gray-50 p-4 rounded-lg">
         <h3 className="text-lg font-medium mb-3">Filters</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
             <input
@@ -119,8 +120,17 @@ const FilterablePersonTable: React.FC<FilterablePersonTableProps> = ({
         Showing {filteredAndSortedPeople.length} of {people.length} people
       </div>
 
-      {/* Table */}
-      <div className="overflow-x-auto bg-white rounded-lg shadow">
+      {/* Mobile Card View */}
+      <div className="block md:hidden">
+        <div className="grid gap-4">
+          {filteredAndSortedPeople.map((person) => (
+            <PersonCard key={person.id} person={person} cities={cities} onDelete={onDelete} />
+          ))}
+        </div>
+      </div>
+
+      {/* Desktop Table View */}
+      <div className="hidden md:block overflow-x-auto bg-white rounded-lg shadow">
         <table className="min-w-full">
           <thead className="bg-gray-50">
             <tr>
@@ -143,10 +153,13 @@ const FilterablePersonTable: React.FC<FilterablePersonTableProps> = ({
                 City {getSortIcon('cityId')}
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Phone
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Aadhaar
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Pet Name
+                Relationship
               </th>
               <th
                 className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
@@ -166,10 +179,13 @@ const FilterablePersonTable: React.FC<FilterablePersonTableProps> = ({
                   {person.name}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {person.balance}
+                  ₹{person.balance.toLocaleString('en-IN')}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {cityMap[person.cityId] || 'N/A'}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  {person.phone || '-'}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {person.aadhaar || '-'}

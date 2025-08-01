@@ -17,8 +17,9 @@ const PersonTable: React.FC<PersonTableProps> = ({ people, cities, onDelete }) =
           <th className="px-4 py-2 text-left">Name</th>
           <th className="px-4 py-2 text-left">Balance</th>
           <th className="px-4 py-2 text-left">City</th>
+          <th className="px-4 py-2 text-left">Phone</th>
           <th className="px-4 py-2 text-left">Aadhaar</th>
-          <th className="px-4 py-2 text-left">Pet Name</th>
+          <th className="px-4 py-2 text-left">Relationship</th>
           <th className="px-4 py-2 text-left">Gender</th>
           <th className="px-4 py-2 text-left">Actions</th>
         </tr>
@@ -31,6 +32,7 @@ const PersonTable: React.FC<PersonTableProps> = ({ people, cities, onDelete }) =
             <td className="px-4 py-2">
               {cities.find((c) => c.id === person.cityId)?.name || 'N/A'}
             </td>
+            <td className="px-4 py-2">{person.phone || '-'}</td>
             <td className="px-4 py-2">{person.aadhaar || '-'}</td>
             <td className="px-4 py-2">{person.petName || '-'}</td>
             <td className="px-4 py-2 capitalize">{person.gender || '-'}</td>

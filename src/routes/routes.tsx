@@ -34,7 +34,7 @@ export const routes: RouteObject[] = [
             <DataProvider>
               <div className="flex h-[100vh] w-[100vw] flex-col">
                 <NavBar />
-                <main className="flex-1 overflow-auto p-4 bg-white/80">
+                <main className="flex-1 overflow-auto p-4 bg-white/80 pb-20 md:pb-4">
                   <Outlet />
                 </main>
               </div>

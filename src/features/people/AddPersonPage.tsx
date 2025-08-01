@@ -10,6 +10,7 @@ const initialNewPerson = {
   cityId: '',
   aadhaar: '',
   petName: '',
+  phone: '',
   gender: 'male',
 };
 
@@ -34,6 +35,7 @@ const AddPersonPage: React.FC = () => {
         cityId: newPerson.cityId,
         aadhaar: newPerson.aadhaar.trim(),
         petName: newPerson.petName.trim(),
+        phone: newPerson.phone.trim(),
         gender: newPerson.gender as 'male' | 'female' | 'other',
       });
       navigate('/people');
@@ -108,12 +110,23 @@ const AddPersonPage: React.FC = () => {
             />
           </div>
           <div>
-            <label className="block mb-1 text-gray-700">Pet Name (optional)</label>
+            <label className="block mb-1 text-gray-700">Phone Number</label>
+            <input
+              type="tel"
+              value={newPerson.phone}
+              onChange={(e) => setNewPerson((p) => ({ ...p, phone: e.target.value }))}
+              className="w-full px-3 py-2 border rounded focus:outline-none focus:ring"
+              placeholder="Enter phone number"
+            />
+          </div>
+          <div>
+            <label className="block mb-1 text-gray-700">Relationship (optional)</label>
             <input
               type="text"
               value={newPerson.petName}
               onChange={(e) => setNewPerson((p) => ({ ...p, petName: e.target.value }))}
               className="w-full px-3 py-2 border rounded focus:outline-none focus:ring"
+              placeholder="e.g., Father, Mother, Spouse, Friend"
             />
           </div>
           <div>
