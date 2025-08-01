@@ -70,6 +70,7 @@ const CityListPage: React.FC = () => {
             <li key={city.id} className="flex items-center justify-between px-4 py-3">
               <span>{city.name}</span>
               <button
+                disabled={true}
                 onClick={() => handleDeleteCity(city.id)}
                 className="text-red-600 hover:underline text-sm"
               >

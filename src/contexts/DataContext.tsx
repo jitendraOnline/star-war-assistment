@@ -55,12 +55,15 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
       setLoans([]);
       setPeopleLoading(false);
       setLoansLoading(false);
+      setError(null);
       return;
     }
 
     setPeopleLoading(true);
     setLoansLoading(true);
+    setError(null);
 
+    // Subscribe to people
     const unsubPeople = subscribeToPeople(
       userId,
       (people) => {
@@ -73,6 +76,7 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
       }
     );
 
+    // Subscribe to loans
     const unsubLoans = subscribeToLoans(
       userId,
       (loans) => {
