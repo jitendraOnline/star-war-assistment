@@ -140,12 +140,7 @@ const FilterablePersonTable: React.FC<FilterablePersonTableProps> = ({
               >
                 Name {getSortIcon('name')}
               </th>
-              <th
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
-                onClick={() => handleSort('balance')}
-              >
-                Balance {getSortIcon('balance')}
-              </th>
+
               <th
                 className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
                 onClick={() => handleSort('cityId')}
@@ -178,9 +173,7 @@ const FilterablePersonTable: React.FC<FilterablePersonTableProps> = ({
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                   {person.name}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  ₹{person.balance.toLocaleString('en-IN')}
-                </td>
+
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {cityMap[person.cityId] || 'N/A'}
                 </td>

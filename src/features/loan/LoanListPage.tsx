@@ -42,6 +42,11 @@ const LoanListPage: React.FC = () => {
       <Container>
         <PageHeader
           title="Loans"
+          backButton={
+            <Button variant="ghost" size="sm" onClick={() => navigate('/dashboard')}>
+              ← Back
+            </Button>
+          }
           actions={
             <Button variant="primary" onClick={handleAddLoanClick}>
               Add Loan
