@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { updatePerson } from './people.service';
-import { subscribeToCities } from '../city/city.service';
-import type { City } from '../city/city.service';
 import { useDataContext } from '@/contexts/DataContext';
 import { useUser } from '@/contexts/UserContext';
+import { CityAutocomplete } from '@/components/UI/CityAutocomplete';
 
 const initialPerson = {
   name: '',
   balance: '',
   cityId: '',
+  cityName: '',
   aadhaar: '',
   petName: '',
   phone: '',
@@ -23,21 +23,9 @@ const EditPersonPage: React.FC = () => {
   const { people } = useDataContext();
   const { userId } = useUser();
   const [person, setPerson] = useState<EditPersonState>(initialPerson);
-  const [cities, setCities] = useState<City[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const unsubCities = subscribeToCities(
-      (cities) => setCities(cities),
-      (err) => setError(err.message)
-    );
-
-    return () => {
-      unsubCities();
-    };
-  }, []);
 
   useEffect(() => {
     if (id && people.length > 0) {
@@ -47,6 +35,7 @@ const EditPersonPage: React.FC = () => {
           name: found.name,
           balance: String(found.balance),
           cityId: found.cityId,
+          cityName: '', // Will be populated by CityAutocomplete based on cityId
           aadhaar: found.aadhaar || '',
           petName: found.petName || '',
           phone: found.phone || '',
@@ -58,13 +47,14 @@ const EditPersonPage: React.FC = () => {
 
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!id || !person.name.trim() || !person.cityId || !userId) return;
+    if (!id || !person.name.trim() || (!person.cityId && !person.cityName.trim()) || !userId)
+      return;
     setLoading(true);
     try {
       await updatePerson(userId, id, {
         name: person.name.trim(),
         balance: Number(person.balance) || 0,
-        cityId: person.cityId,
+        cityId: person.cityId || person.cityName.trim(), // Use cityId if available, otherwise use cityName
         aadhaar: person.aadhaar.trim(),
         petName: person.petName.trim(),
         phone: person.phone.trim(),
@@ -101,7 +91,7 @@ const EditPersonPage: React.FC = () => {
             required
           />
         </div>
-        <div>
+        <div className="hidden">
           <label className="block mb-1 text-gray-700">Balance</label>
           <input
             type="number"
@@ -111,20 +101,13 @@ const EditPersonPage: React.FC = () => {
           />
         </div>
         <div>
-          <label className="block mb-1 text-gray-700">City</label>
-          <select
+          <label className="block mb-2 text-sm font-medium text-gray-700">City *</label>
+          <CityAutocomplete
             value={person.cityId}
-            onChange={(e) => setPerson((p) => ({ ...p, cityId: e.target.value }))}
-            className="w-full px-3 py-2 border rounded focus:outline-none focus:ring"
+            onChange={(cityId, cityName) => setPerson((p) => ({ ...p, cityId, cityName }))}
+            placeholder="Enter or select city name"
             required
-          >
-            <option value="">Select City</option>
-            {cities.map((city) => (
-              <option key={city.id} value={city.id}>
-                {city.name}
-              </option>
-            ))}
-          </select>
+          />
         </div>
         <div>
           <label className="block mb-1 text-gray-700">Aadhaar Card Number</label>

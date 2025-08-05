@@ -71,7 +71,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({ user, formatCurrency }) =
           View Details
         </Link>
         <Link
-          to={`/loans/add?personId=${user.personId}`}
+          to={`/loans/add?personId=${user.personId}&from=dashboard`}
           className="flex-1 text-center text-green-600 hover:text-green-800 text-xs font-medium px-2 py-1.5 rounded hover:bg-green-50 transition-colors"
         >
           New Loan

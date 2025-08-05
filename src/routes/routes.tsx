@@ -8,6 +8,8 @@ import UserLoanDashboard from '@/features/loan/UserLoanDashboard';
 import UserLoanDetailsPage from '@/features/loan/UserLoanDetailsPage';
 import UserDepositPage from '@/features/loan/UserDepositPage';
 import LoginPage from '@/pages/LoginPage';
+import ForgotPasswordPage from '@/pages/ForgotPasswordPage';
+import ProfilePage from '@/pages/ProfilePage';
 import { Navigate, Outlet, type RouteObject } from 'react-router-dom';
 
 import AuthGuard from './AuthGuard';
@@ -23,6 +25,10 @@ export const routes: RouteObject[] = [
   {
     path: '/login',
     element: <LoginPage />,
+  },
+  {
+    path: '/forgot-password',
+    element: <ForgotPasswordPage />,
   },
   {
     path: '/',
@@ -51,6 +57,10 @@ export const routes: RouteObject[] = [
       {
         path: 'dashboard',
         element: <UserLoanDashboard />,
+      },
+      {
+        path: 'profile',
+        element: <ProfilePage />,
       },
       {
         path: 'city',

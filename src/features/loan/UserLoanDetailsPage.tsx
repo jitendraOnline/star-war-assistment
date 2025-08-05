@@ -105,7 +105,7 @@ const UserLoanDetailsPage: React.FC = () => {
           }
           actions={
             <div className="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-2">
-              <Link to={`/loans/add?personId=${personId}`}>
+              <Link to={`/loans/add?personId=${personId}&from=user-details`}>
                 <Button variant="success" size="sm" fullWidth className="sm:w-auto">
                   + New Loan
                 </Button>
